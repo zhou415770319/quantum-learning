@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>量子计算转岗面试资料（前端工程师版）</title>
+<style>
+:root{--ink:#1E3A8A;--teal:#0F766E;--amber:#B45309;--body:#334155;--muted:#64748B;
+--line:#E2E8F0;--panel:#F7F9FC;--bg:#FFFFFF}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--body);
+font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif;font-size:16px;line-height:1.75}
+.layout{display:grid;grid-template-columns:280px 1fr;max-width:1440px;margin:0 auto}
+nav{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;padding:28px 18px 40px;
+border-right:1px solid var(--line);background:var(--panel)}
+nav .brand{font-weight:800;color:var(--ink);font-size:18px;margin-bottom:4px}
+nav .sub{font-size:12px;color:var(--muted);margin-bottom:18px;font-family:Consolas,monospace;letter-spacing:1px}
+nav ul{list-style:none;margin:0;padding-left:0}
+nav .toctree-l1>a{font-weight:700;color:var(--ink)}
+nav .toctree-l2>a{color:var(--body);font-size:13.5px}
+nav a{display:block;padding:5px 8px;border-radius:6px;text-decoration:none;font-size:14px;line-height:1.45}
+nav a:hover{background:#E8EEFB;color:var(--ink)}
+main{padding:44px 56px 90px;min-width:0;max-width:980px}
+h1{font-size:32px;color:var(--ink);margin:8px 0 6px;letter-spacing:-.5px}
+h2{font-size:24px;color:var(--ink);margin:46px 0 12px;padding-top:16px;border-top:1px solid var(--line)}
+h3{font-size:19px;color:#16337a;margin:30px 0 10px}
+h4{font-size:16.5px;color:var(--teal);margin:22px 0 8px}
+p{margin:10px 0}
+blockquote{margin:14px 0;padding:10px 16px;background:var(--panel);border-left:4px solid var(--teal);
+color:var(--body);border-radius:0 8px 8px 0;font-size:15px}
+blockquote p{margin:4px 0}
+code{font-family:Consolas,"Cascadia Mono",monospace;font-size:13.5px;background:#EEF2F7;
+padding:2px 6px;border-radius:4px;color:#0F3B66}
+pre{background:#0F172A;color:#DBEAFE;padding:18px 20px;border-radius:10px;overflow:auto;line-height:1.6}
+pre code{background:none;color:inherit;padding:0;font-size:13.5px}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px;
+border:1px solid var(--line);border-radius:8px;overflow:hidden}
+th{background:var(--panel);color:var(--ink);text-align:left;font-weight:700}
+th,td{border-bottom:1px solid var(--line);padding:8px 12px;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:#FBFCFE}
+.math{font-family:"Cambria Math","Times New Roman",serif;color:#16337A;
+background:#F1F5FB;padding:1px 6px;border-radius:4px;white-space:nowrap}
+.dmath{font-family:"Cambria Math","Times New Roman",serif;font-size:18px;color:#16337A;
+background:var(--panel);border:1px solid var(--line);border-radius:10px;
+padding:14px 20px;margin:16px 0;overflow-x:auto;text-align:center}
+sup,sub{font-size:.72em}
+.video-card{margin:20px 0 28px;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+background:var(--panel);box-shadow:0 1px 3px rgba(30,58,138,.06)}
+.video-card figcaption{padding:12px 18px 4px;font-size:15px;color:var(--ink)}
+.video-card video{display:block;width:100%;aspect-ratio:16/9;background:#000}
+.video-card .vnote{padding:10px 18px 14px;margin:0;font-size:14px;color:var(--muted)}
+.foot{margin-top:60px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+@media print{nav{display:none}.layout{display:block}main{padding:0 8mm}}
+</style></head>
+<body><div class="layout">
+<nav><div class="brand">量子计算转岗面试资料</div>
+<div class="sub">FRONTEND → QUANTUM DEV</div><div class="toc">
+<ul>
+<li><a href="#_1">量子计算转岗面试资料（前端工程师零基础版）</a><ul>
+<li><a href="#0">0. 这份资料怎么用</a><ul>
+<li><a href="#01">0.1 学习顺序（最重要的一节）</a></li>
+<li><a href="#02">0.2 面试的三种问法（先知道会被怎么问）</a></li>
+<li><a href="#03">0.3 三条必须先立住的观念（答错直接出局）</a></li>
+</ul>
+</li>
+<li><a href="#1">1. 前端转量子开发：转的是什么</a><ul>
+<li><a href="#11">1.1 岗位地图（你能在哪里落地）</a></li>
+<li><a href="#12">1.2 你已有的直觉，哪些能直接迁移</a></li>
+</ul>
+</li>
+<li><a href="#2">2. 数学最小集：五个零件（每个配一道手算题）</a><ul>
+<li><a href="#21">2.1 复向量（态）</a></li>
+<li><a href="#22">2.2 内积（概率从哪来）</a></li>
+<li><a href="#23">2.3 两类特殊矩阵（一句话口诀：门是酉的，量是厄的）</a></li>
+<li><a href="#24">2.4 张量积（多比特空间怎么拼）</a></li>
+<li><a href="#25">2.5 本征分解（测量的数学定义）</a></li>
+</ul>
+</li>
+<li><a href="#3">3. 量子力学五公设（工程师版）</a></li>
+<li><a href="#4-bloch">4. 量子比特：叠加、测量、纠缠、Bloch 球</a><ul>
+<li><a href="#41-bloch">4.1 Bloch 球（单比特态的几何表示）</a></li>
+<li><a href="#42">4.2 纠缠（面试必考）</a></li>
+<li><a href="#43">4.3 测量的四条工程纪律</a></li>
+<li><a href="#44">4.4 不可克隆定理（一句话证明）</a></li>
+</ul>
+</li>
+<li><a href="#5">5. 量子门完全手册（重点章节）</a><ul>
+<li><a href="#51">5.1 单比特门</a><ul>
+<li><a href="#i">I 恒等门</a></li>
+<li><a href="#x-not">X 门（比特翻转 / NOT）</a></li>
+<li><a href="#z">Z 门（相位翻转）</a></li>
+<li><a href="#h-hadamard">H 门（Hadamard，最重要的门）</a></li>
+<li><a href="#stp">S、T、P(λ)（相位门家族）</a></li>
+<li><a href="#rx-ry-rz">旋转门 Rx / Ry / Rz（参数化门）</a></li>
+</ul>
+</li>
+<li><a href="#52">5.2 两比特门（力量的真正来源）</a><ul>
+<li><a href="#cnot-cx">CNOT / CX（受控非，必背）</a></li>
+<li><a href="#cz-z">CZ（受控 Z）</a></li>
+<li><a href="#swap">SWAP</a></li>
+<li><a href="#toffoli-ccx88">Toffoli / CCX（双控非，8×8）</a></li>
+</ul>
+</li>
+<li><a href="#53">5.3 电路图的六条读图规则</a></li>
+<li><a href="#54">5.4 深度与门数（面试必考的工程指标）</a></li>
+<li><a href="#55">5.5 通用门集</a></li>
+</ul>
+</li>
+<li><a href="#6">6. 核心算法与完整推导（配三支动画）</a><ul>
+<li><a href="#61-oracle">6.1 Oracle 是什么</a></li>
+<li><a href="#62-deutschjozsa">6.2 Deutsch–Jozsa：一次查询判断"常量还是平衡"</a></li>
+<li><a href="#63-bernsteinvazirani">6.3 Bernstein–Vazirani：一次问出隐藏比特串</a></li>
+<li><a href="#64-grover-02">6.4 Grover：振幅放大（★ 动画 02 逐帧推演）</a></li>
+<li><a href="#65-qft">6.5 QFT：量子傅里叶变换（发动机）</a></li>
+<li><a href="#66-qpe-03">6.6 QPE：相位估计（★ 动画 03 逐步推演）</a></li>
+<li><a href="#67-shor">6.7 Shor：把分解变成求周期（完整链路）</a></li>
+<li><a href="#68-vqe-qaoanisq">6.8 VQE / QAOA：NISQ 时代的主力</a></li>
+<li><a href="#69">6.9 算法全景对照表</a></li>
+</ul>
+</li>
+<li><a href="#7">7. 协议：隐形传态与超密编码</a><ul>
+<li><a href="#71">7.1 隐形传态：逐步振幅推导（面试要求能白板推）</a></li>
+<li><a href="#72">7.2 超密编码（同一份纠缠，反过来用）</a></li>
+</ul>
+</li>
+<li><a href="#8">8. 噪声、退相干与纠错（面试的工程分水岭）</a><ul>
+<li><a href="#81">8.1 噪声从哪来</a></li>
+<li><a href="#82">8.2 纠错的最小例子（三比特比特翻转码）</a></li>
+<li><a href="#83">8.3 表面码与阈值定理（知道结论即可）</a></li>
+</ul>
+</li>
+<li><a href="#9-qiskit">9. 动手：Qiskit 三步法（面试现场可能让你写）</a><ul>
+<li><a href="#91">9.1 三步框架</a></li>
+<li><a href="#92">9.2 贝尔态实验（最该背的实验）</a></li>
+<li><a href="#93">9.3 真机提交流程（四步）</a></li>
+</ul>
+</li>
+<li><a href="#10">10. 硬件与行业（面试验证"视野"的部分）</a></li>
+<li><a href="#11-25">11. 面试题库（25 题，先自答再看要点）</a><ul>
+<li><a href="#_2">基础层</a></li>
+<li><a href="#_3">门与电路层</a></li>
+<li><a href="#_4">算法层</a></li>
+<li><a href="#_5">工程与视野层</a></li>
+</ul>
+</li>
+<li><a href="#12_1">12. 公式速查表（考前一页）</a></li>
+<li><a href="#13">13. 术语速查</a></li>
+<li><a href="#14">14. 三支动画对应的学习点</a></li>
+<li><a href="#15-30">15. 30 天备考计划（按周执行）</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+<div class="sub" style="margin-top:26px">配套动画在正文对应章节内嵌</div></nav>
+<main><h1 id="_1">量子计算转岗面试资料（前端工程师零基础版）</h1>
+<blockquote>
+<p>面向对象：有 Web 前端经验、没有任何量子物理背景、准备转做量子计算开发的工程师。
+配套动画：<code>../assets/videos/01_量子门与态演化.mp4</code>、<code>../assets/videos/02_Grover振幅放大.mp4</code>、<code>../assets/videos/03_QPE相位估计.mp4</code>（每一步推导都在画面上展开）。
+内容依据：《给工程师们讲量子计算》系列课程笔记（见 <code>参考资料/</code>），按"够面试、够上手写代码"的颗粒度重组。</p>
+</blockquote>
+<hr />
+<h2 id="0">0. 这份资料怎么用</h2>
+<h3 id="01">0.1 学习顺序（最重要的一节）</h3>
+<p>面试官默认你会的东西按依赖关系排成一棵树，从下往上学最快：</p>
+<div class="codehilite"><pre><span></span><code>第1层 数学（2天）  ：复向量 → 内积 → 矩阵（酉/厄米） → 张量积 → 本征分解
+第2层 语义（2天）  ：五公设 → 叠加/纠缠/测量 → Bloch 球 → 退相干
+第3层 电路（3天）  ：单比特门 → CNOT → 电路读法 → 深度/门数 → 通用门集
+第4层 算法（5天）  ：四段式 → DJ → BV → Grover → QFT → QPE → Shor → VQE/QAOA
+第5层 动手（3天）  ：Qiskit 三步法 → 贝尔态 → Grover 实跑 → 真机提交流程
+第6层 视野（2天）  ：硬件路线 → 纠错 → 行业格局 → NISQ 现实约束
+</code></pre></div>
+
+<h3 id="02">0.2 面试的三种问法（先知道会被怎么问）</h3>
+<table>
+<thead>
+<tr>
+<th>问法</th>
+<th>例子</th>
+<th>你要拿出来的东西</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>概念题</td>
+<td>"什么是叠加？纠缠和经典关联差在哪？"</td>
+<td>一句话说清 + 一个反直觉点</td>
+</tr>
+<tr>
+<td>计算题</td>
+<td>"写出 H 门矩阵并算 H|0⟩"</td>
+<td>当场手算矩阵乘向量</td>
+</tr>
+<tr>
+<td>设计题</td>
+<td>"给你一个问题，怎么设计 oracle？"</td>
+<td>四段式框架 + oracle 门数估算</td>
+</tr>
+</tbody>
+</table>
+<h3 id="03">0.3 三条必须先立住的观念（答错直接出局）</h3>
+<ol>
+<li><strong>叠加 ≠ 同时算出所有答案</strong>。测量只能拿到一个随机结果；加速全部来自<strong>干涉</strong>。</li>
+<li><strong>量子门都是可逆的</strong>，经典与门这种"两进一出"不能直接实现，要用 Toffoli + 辅助位。</li>
+<li><strong>测量是唯一不可逆的操作</strong>，所以调试只能靠 shots 统计，不能"print 一下中间态"。</li>
+</ol>
+<hr />
+<h2 id="1">1. 前端转量子开发：转的是什么</h2>
+<h3 id="11">1.1 岗位地图（你能在哪里落地）</h3>
+<table>
+<thead>
+<tr>
+<th>岗位方向</th>
+<th>干什么</th>
+<th>和前端的交叠</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>量子 SDK / 工具链开发</td>
+<td>编译器前端（把用户的电路翻译成硬件原生门）、transpile 优化、AST 级电路操作</td>
+<td><strong>最高</strong>。本质是编译器 + DSL 设计</td>
+</tr>
+<tr>
+<td>量子云平台 / 控制台</td>
+<td>任务队列、设备状态页、结果可视化、账号与配额系统</td>
+<td><strong>高</strong>。就是 Web 全栈，只是数据域变成量子任务</td>
+</tr>
+<tr>
+<td>量子算法工程</td>
+<td>把业务问题写成 oracle + ansatz，跑 VQE/QAOA</td>
+<td>中。需要补第 4 层全部内容</td>
+</tr>
+<tr>
+<td>量子模拟器</td>
+<td>在经典机上模拟态矢量的高性能计算（Rust/C++/WASM）</td>
+<td>中。前端可做 WASM/WebGPU 模拟器、可视化调试器</td>
+</tr>
+<tr>
+<td>教育 / 开发者关系</td>
+<td>教程、交互式课件、 Playground</td>
+<td><strong>高</strong>。Qiskit Textbook 就是最好的参照物</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>面试策略：主动把话题往"电路可视化 / 编译器前端 / 云平台"引，这是你的主场；同时证明你懂第 2–4 层的语义，不是纯 UI。</p>
+</blockquote>
+<h3 id="12">1.2 你已有的直觉，哪些能直接迁移</h3>
+<table>
+<thead>
+<tr>
+<th>前端概念</th>
+<th>量子对应</th>
+<th>注意差异</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>组件 state</td>
+<td>态矢量 <span class="math"></td>
+<td>ψ⟩</span></td>
+</tr>
+<tr>
+<td>纯函数 / reducer</td>
+<td>量子门（酉矩阵）</td>
+<td>门必须是可逆的，且作用在 2ⁿ 维向量上</td>
+</tr>
+<tr>
+<td>组合多个 state（笛卡尔积）</td>
+<td>张量积 <span class="math">⊗</span></td>
+<td>维度相乘：2 ⊗ 2 = 4 维</td>
+</tr>
+<tr>
+<td>CSS transform 矩阵</td>
+<td>门 = 旋转</td>
+<td>量子门就是希尔伯特空间里的旋转矩阵</td>
+</tr>
+<tr>
+<td>打点采样 / 埋点统计</td>
+<td>shots 测量统计</td>
+<td>同款思路：跑 1024 次取分布</td>
+</tr>
+<tr>
+<td>localStorage 缓存</td>
+<td>❌ 不存在</td>
+<td>不可克隆定理：量子态无法备份</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2">2. 数学最小集：五个零件（每个配一道手算题）</h2>
+<blockquote>
+<p>面试里 90% 的"计算题"只用到这五样。全部可以用 NumPy 两行验证。</p>
+</blockquote>
+<h3 id="21">2.1 复向量（态）</h3>
+<p>一个量子比特的态就是一个<strong>长度为 2 的复数列向量</strong>：</p>
+<div class="dmath">|0⟩ = [1, 0]ᵀ          |1⟩ = [0, 1]ᵀ          |ψ⟩ = α|0⟩ + β|1⟩ = [α, β]ᵀ,     |α|²+|β|²=1</div>
+
+<ul>
+<li><span class="math">α,β</span> 叫<strong>概率幅</strong>（复数），本身不可观测；<span class="math">|α|²</span> 才是测到 0 的概率。</li>
+<li>归一化就是"总概率为 1"。</li>
+<li>n 个比特 → <span class="math">2ⁿ</span> 维向量（50 比特 = 2⁵⁰ ≈ 10¹⁵ 个复数，这就是经典模拟撑不住的原因）。</li>
+</ul>
+<p><strong>手算题</strong>：<span class="math">|ψ⟩ = 1/2|0⟩ + √3/2|1⟩</span>，测到 0 和 1 的概率？
+答：<span class="math">P(0)=1/4=25%</span>，<span class="math">P(1)=3/4=75%</span>。</p>
+<h3 id="22">2.2 内积（概率从哪来）</h3>
+<p>bra 是 ket 的<strong>共轭转置</strong>：<span class="math">⟨ψ|= [α<em>, β</em>]</span>。内积</p>
+<div class="dmath">⟨φ|ψ⟩ = φ₀*ψ₀ + φ₁*ψ₁     ⇒     P = |⟨φ|ψ⟩|²</div>
+
+<ul>
+<li><span class="math">|⟨φ|ψ⟩|²</span> = "态是 <span class="math">|ψ⟩</span> 却测出 <span class="math">|φ⟩</span> 特征"的概率。</li>
+<li><strong>正交</strong>（内积为 0）= 两个态完全可区分。<span class="math">⟨0|0⟩=1</span>，<span class="math">⟨0|1⟩=0</span>。</li>
+</ul>
+<p><strong>手算题</strong>：<span class="math">⟨+|−⟩</span>，其中 <span class="math">|±⟩=1/√2(|0⟩±|1⟩)</span>？
+答：<span class="math">1/2(1−1)=0</span>，正交 → 测量完美区分。</p>
+<h3 id="23">2.3 两类特殊矩阵（一句话口诀：<strong>门是酉的，量是厄的</strong>）</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>酉矩阵 Unitary</th>
+<th>厄米矩阵 Hermitian</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>定义</td>
+<td><span class="math">U^(†) U = I</span></td>
+<td><span class="math">A^(†) = A</span></td>
+</tr>
+<tr>
+<td>物理角色</td>
+<td><strong>演化 / 量子门</strong></td>
+<td><strong>可观测量 / 测量</strong></td>
+</tr>
+<tr>
+<td>关键性质</td>
+<td>可逆（<span class="math">U⁻¹=U^(†)</span>）、保内积、保概率</td>
+<td>本征值必为<strong>实数</strong>、可正交对角化</td>
+</tr>
+<tr>
+<td>例子</td>
+<td>X、H、CNOT</td>
+<td>Z、哈密顿量 H</td>
+</tr>
+</tbody>
+</table>
+<p><strong>手算题</strong>：验证 <span class="math">X^(†) X = I</span>（X 是实对称矩阵，转置即自身，<span class="math">X²=I</span> ✓）。</p>
+<h3 id="24">2.4 张量积（多比特空间怎么拼）</h3>
+<p><span class="math">A⊗ B</span>：维度相乘。基矢展开必须背下来：</p>
+<div class="dmath">|00⟩=[1, 0, 0, 0]ᵀ     |01⟩=[0, 1, 0, 0]ᵀ     |10⟩=[0, 0, 1, 0]ᵀ     |11⟩=[0, 0, 0, 1]ᵀ</div>
+
+<p>两比特门 = 4×4 酉矩阵；三比特门 = 8×8。<strong>最容易犯的错：把张量积和普通矩阵乘法混为一谈</strong>——张量积是"拼装空间"，矩阵乘是"复合操作"。</p>
+<p><strong>手算题</strong>：<span class="math">|0⟩⊗|1⟩ = |01⟩ = [0,1,0,0]ᵀ</span>。</p>
+<h3 id="25">2.5 本征分解（测量的数学定义）</h3>
+<p>厄米算符可分解为 <span class="math">A = Σᵢ λᵢ |aᵢ⟩⟨aᵢ|</span>，其中 <span class="math">λᵢ</span> 是实本征值、<span class="math">|aᵢ⟩</span> 是正交本征态。<strong>测量 = 往这组本征基上投影</strong>：得到 <span class="math">λᵢ</span> 的概率是 <span class="math">|⟨aᵢ|ψ⟩|²</span>，测完塌缩到 <span class="math">|aᵢ⟩</span>。</p>
+<blockquote>
+<p>实用推论：想在 X 基上测量（而不是默认的 Z 基），<strong>测量前加一个 H 门</strong>即可——H 恰好把 X 的本征基 <span class="math">|±⟩</span> 转到 Z 基 <span class="math">|0⟩,|1⟩</span>。</p>
+</blockquote>
+<hr />
+<h2 id="3">3. 量子力学五公设（工程师版）</h2>
+<table>
+<thead>
+<tr>
+<th>公设</th>
+<th>内容</th>
+<th>代码世界对应</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① 状态</td>
+<td>封闭系统由希尔伯特空间中的单位态矢描述</td>
+<td>一个 qubit = 一个二维复向量</td>
+</tr>
+<tr>
+<td>② 演化</td>
+<td>演化由酉算符给出（薛定谔方程）</td>
+<td>每个量子门 = 一个酉矩阵</td>
+</tr>
+<tr>
+<td>③ 测量</td>
+<td>得到可观测量本征值之一，概率为内积模方，测后塌缩</td>
+<td>readout = 投影测量</td>
+</tr>
+<tr>
+<td>④ 复合</td>
+<td>多体系统 = 各子系统空间的<strong>张量积</strong></td>
+<td>n 个比特 = 2ⁿ 维空间</td>
+</tr>
+<tr>
+<td>⑤ 全同粒子</td>
+<td>同种粒子不可区分</td>
+<td>（面试少问，知道即可）</td>
+</tr>
+</tbody>
+</table>
+<p>由②直接推出三条面试高频结论：门<strong>可逆</strong>（<span class="math">U⁻¹=U^(†)</span>）、<strong>保内积</strong>、<strong>保概率</strong>——所以量子电路画出来总是"能反着做回去"的门序列。</p>
+<p><strong>退相干（decoherence）</strong>：系统与环境纠缠后，密度矩阵的非对角元衰减 → Bloch 矢量向球心收缩 → 叠加信息丢失。"相干时间 T1/T2"就是这个过程的时间常数。这是硬件所有"能跑多深的电路"问题的根源。</p>
+<hr />
+<h2 id="4-bloch">4. 量子比特：叠加、测量、纠缠、Bloch 球</h2>
+<h3 id="41-bloch">4.1 Bloch 球（单比特态的几何表示）</h3>
+<div class="dmath">|ψ⟩ = cos(θ/2)·|0⟩ + e^(iφ)sin(θ/2)·|1⟩</div>
+
+<ul>
+<li>球面上一点 = 一个<strong>纯态</strong>；球内 = <strong>混合态</strong>（需密度矩阵 <span class="math">ρ</span> 描述，纯度 <span class="math">Tr(ρ²)&lt;1</span>）；球心 = 完全随机。</li>
+<li>自由度只有 2（θ 和 φ）：虽然 α、β 是 4 个实数，但归一化去掉 1 个、<strong>全局相位</strong> <span class="math">e^(iγ)</span> 不可观测再去掉 1 个。</li>
+<li><strong>门 = 球面旋转；测量 = 向某轴投影</strong>。这句话能解释后面所有门的几何意义。</li>
+</ul>
+<h3 id="42">4.2 纠缠（面试必考）</h3>
+<p>定义：两比特联合态<strong>写不成</strong> <span class="math">|ψ⟩⊗|φ⟩</span> 的形式。</p>
+<p>贝尔态 <span class="math">|Φ⁺⟩ = 1/√2(|00⟩+|11⟩)</span> 的标准反证：</p>
+<p>假设可分成 <span class="math">(a|0⟩+b|1⟩)⊗(c|0⟩+d|1⟩)</span>，展开比较系数得 <span class="math">ac=bd=1/2, ad=bc=0</span>。由 <span class="math">ad=0</span>：a=0 或 d=0；若 a=0 则 <span class="math">ac=0≠1/2</span> 矛盾，若 d=0 则 <span class="math">bd=0≠1/2</span> 矛盾。<strong>所以拆不开，纠缠成立。</strong></p>
+<p>特征：单独测任何一个比特都是 50/50 纯随机，但两边结果<strong>必然相同</strong>——这种关联无法用任何"事先约定的局部隐变量"解释（CHSH 不等式：经典上限 2，量子可达 <span class="math">2√2≈2.83</span>，2022 诺奖实验验证）。</p>
+<h3 id="43">4.3 测量的四条工程纪律</h3>
+<ol>
+<li>结果是概率性的 → 只能靠 <strong>shots</strong>（重复运行）统计分布；</li>
+<li>中间测量会打断计算（塌缩）；</li>
+<li>立即重测同一观测量 → 必得同一结果；</li>
+<li>换测量基 = 测量前做一次基变换门（最常用：加 H 测 X 基）。</li>
+</ol>
+<h3 id="44">4.4 不可克隆定理（一句话证明）</h3>
+<p>不存在酉矩阵 U 使得 <span class="math">U|ψ⟩|0⟩ = |ψ⟩|ψ⟩</span> 对<strong>所有</strong> <span class="math">|ψ⟩</span> 成立。反证：对 <span class="math">|ψ⟩=|0⟩</span> 和 <span class="math">|1⟩</span> 各自成立时，作用在 <span class="math">1/√2(|0⟩+|1⟩)</span> 上，酉性（保内积）要求结果必须是 <span class="math">(|00⟩+|11⟩)/√2</span>，而"克隆"要求 <span class="math">(|0⟩|0⟩+|1⟩|1⟩)/√2</span>——两者不相等（一个是纠缠态、一个是乘积态）。矛盾。</p>
+<hr />
+<h2 id="5">5. 量子门完全手册（重点章节）</h2>
+<figure class="video-card"><figcaption><b>动画 01</b> · 量子门与态演化 · 30 秒</figcaption><video controls preload="metadata" src="../assets/videos/01_量子门与态演化.mp4"></video><p class="vnote">跟着画面手算一遍：每个门就是一次矩阵×向量；注意第 5、6 步——相位不变概率、却改变干涉结果。</p></figure>
+
+<blockquote>
+<p>每个门按"矩阵 / 它到底干什么 / 什么时候用 / 面试怎么问"给出。<strong>矩阵×向量必须能当场手算。</strong></p>
+</blockquote>
+<h3 id="51">5.1 单比特门</h3>
+<h4 id="i">I 恒等门</h4>
+<div class="dmath">I=[[1, 0], [0, 1]]</div>
+<p>什么都不做。用于占位、对齐电路深度。</p>
+<h4 id="x-not">X 门（比特翻转 / NOT）</h4>
+<div class="dmath">X=[[0, 1], [1, 0]]         X|0⟩=|1⟩, X|1⟩=|0⟩</div>
+<ul>
+<li><strong>干什么</strong>：交换两个振幅，Bloch 球上绕 x 轴转 180°。</li>
+<li><strong>什么时候用</strong>：编码经典比特、构造 oracle 的"翻转目标位"部分。</li>
+<li><strong>面试问法</strong>："X 和经典 NOT 有什么区别？"——答：对叠加态 <span class="math">X(α|0⟩+β|1⟩)=β|0⟩+α|1⟩</span>，它交换的是<strong>振幅</strong>，不是测量结果那么简单。</li>
+</ul>
+<h4 id="z">Z 门（相位翻转）</h4>
+<div class="dmath">Z=[[1, 0], [0, −1]]         Z|0⟩=|0⟩,     Z|1⟩=−|1⟩</div>
+<ul>
+<li><strong>干什么</strong>：给 <span class="math">|1⟩</span> 分量乘 −1；测量结果<strong>完全不变</strong>。</li>
+<li><strong>什么时候用</strong>：oracle 的相位标记；纠错码里查相位错误。</li>
+<li><strong>面试问法</strong>："Z 门是不是没用的门？"——答：单独测确实看不出变化，但相位决定干涉方向（见动画 01 第 5、6 步），所有算法的杠杆都在相位上。</li>
+</ul>
+<h4 id="h-hadamard">H 门（Hadamard，最重要的门）</h4>
+<div class="dmath">H=1/√2[[1, 1], [1, −1]]         H|0⟩=(|0⟩+|1⟩)/√2=|+⟩,     H|1⟩=|−⟩,     H|+⟩=|0⟩</div>
+<ul>
+<li><strong>干什么</strong>：Bloch 球上把 z 轴转到 x 轴（绕 (x+z) 轴 180°）。是"确定态 → 等权叠加"的唯一常用入口。</li>
+<li><strong>什么时候用</strong>：所有算法第一步（造叠加）、测量前换基、造贝尔态。</li>
+<li><strong>面试问法</strong>："H 加 H 等于什么？"——答：<span class="math">H²=I</span>，抵消。但<strong>中间夹相位门就不抵消</strong>：HZH = X。</li>
+</ul>
+<h4 id="stp">S、T、P(λ)（相位门家族）</h4>
+<div class="dmath">S=[[1, 0], [0, i]]    (φ=π/2)         T=[[1, 0], [0, e^(iπ/4)]]    (φ=π/4)         P(λ)=[[1, 0], [0, e^(iλ)]]</div>
+<ul>
+<li><strong>干什么</strong>：只给 <span class="math">|1⟩</span> 分量加相位。单独使用对测量结果零影响。</li>
+<li><strong>什么时候用</strong>：与 H 配合产生干涉；<strong>T 是通用门集里唯一的非 Clifford 门</strong>（纠错时靠 magic state 蒸馏获得，开销最大——这是面试的加分细节）。</li>
+<li>关系：<span class="math">T²=S</span>，<span class="math">S²=Z</span>，<span class="math">Z²=I</span>。</li>
+</ul>
+<h4 id="rx-ry-rz">旋转门 Rx / Ry / Rz（参数化门）</h4>
+<div class="dmath">R_P(θ)=e^(−iθP/2)=cos(θ/2)·I − i·sin(θ/2)·P         (P=X,Y,Z)</div>
+<ul>
+<li><strong>干什么</strong>：绕对应轴旋转 θ 角。<span class="math">R_(z)</span> 只改相位、<span class="math">Rₓ</span> 交换振幅、<span class="math">R_(y)</span> 两者都动。</li>
+<li><strong>什么时候用</strong>：VQE/QAOA 的 ansatz（参数化电路）全部由旋转门构成；任意单比特门都能分解成三个旋转（ZYZ 分解：<span class="math">U=e^(iα)R_(z)(β)R_(y)(γ)R_(z)(δ)</span>，Qiskit 的 <code>u(θ,φ,λ)</code> 就是它）。</li>
+<li><strong>面试问法</strong>："为什么硬件只需要实现两三种原生门？"——答：任意酉矩阵都可 ZYZ 分解，编译器负责把其余门合成出去。</li>
+</ul>
+<h3 id="52">5.2 两比特门（力量的真正来源）</h3>
+<h4 id="cnot-cx">CNOT / CX（受控非，必背）</h4>
+<p>真值表（控制位不变，目标位 = 控制 XOR 目标）：</p>
+<table>
+<thead>
+<tr>
+<th>控制</th>
+<th>目标入</th>
+<th>目标出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<div class="dmath">CNOT=[[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 0, 1], [0, 0, 1, 0]]</div>
+<ul>
+<li><strong>干什么</strong>：控制位为 1 时翻转目标位。<strong>它是产生纠缠的最小工具</strong>：对叠加的控制位作用时，输出无法分解成两个单比特态。</li>
+<li><strong>什么时候用</strong>：造贝尔态、隐形传态、纠错稳定子测量、oracle。</li>
+<li><strong>面试问法</strong>："CNOT 为什么能造纠缠？"——答：作用在 <span class="math">1/√2(|00⟩+|10⟩)</span> 上得到 <span class="math">1/√2(|00⟩+|11⟩)</span>，用第 4.2 节的反证可验证拆不开。</li>
+</ul>
+<h4 id="cz-z">CZ（受控 Z）</h4>
+<div class="dmath">CZ=diag(1,1,1,−1)</div>
+<p>两个比特都是 1 时给联合态加 −1。<strong>对称门</strong>（不分控制/目标），超导硬件上往往比 CNOT 更容易直接实现；CNOT = H·CZ·H。</p>
+<h4 id="swap">SWAP</h4>
+<p>交换两个比特的态，由 <strong>3 个 CNOT</strong> 组成。用途：绕开硬件拓扑限制（coupling map 不相邻时，编译器自动插入 SWAP——每次插入都让电路变深）。</p>
+<h4 id="toffoli-ccx88">Toffoli / CCX（双控非，8×8）</h4>
+<p>两个控制位都为 1 时翻转目标位。<strong>它是"可逆的与门"</strong>：输入 A、B 和置 0 的辅助位，输出 A、B、A∧B——保留了全部输入信息所以可逆。由此推出：经典电路都可以搬进量子电路（代价是辅助位和 uncompute 结构），这是 Grover oracle 正确性的基础。</p>
+<h3 id="53">5.3 电路图的六条读图规则</h3>
+<ol>
+<li>时间从左到右，横线 = 量子比特，双横线 = 经典比特；</li>
+<li>方块 = 单比特门；<strong>实心点 = 控制，⊕ = 目标</strong>；</li>
+<li>测量符号（表盘）把量子线接到经典线；</li>
+<li>竖直串起来的门 = 同一时刻并行（不增加深度）；</li>
+<li>barrier（虚线屏障）阻止编译器跨越优化；</li>
+<li>电路整体必须是酉的（除末端测量外）——看到"两进一出"的结构就要想到辅助位。</li>
+</ol>
+<h3 id="54">5.4 深度与门数（面试必考的工程指标）</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>定义</th>
+<th>决定什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>门数 gate count</td>
+<td>总门数</td>
+<td>总错误量（每门 99.9% 保真度，1000 门后成功率约 37%）</td>
+</tr>
+<tr>
+<td>深度 depth</td>
+<td>最长路径上的门数</td>
+<td>需要的相干时间：深度 × 单门时间 ≤ 相干时间（200µs / 10ns ≈ 2 万层上限）</td>
+</tr>
+</tbody>
+</table>
+<p>优化顺序：<strong>先降深度（保证跑得完），再降门数（保证算得准）</strong>。</p>
+<h3 id="55">5.5 通用门集</h3>
+<p><strong>任意单比特门 + CNOT = 通用</strong>。工程版说法：<strong>Clifford 门（H、S、CNOT）+ T 门</strong>——T 是其中唯一非 Clifford 的门。不同硬件原生门集不同（IBM：<code>rz, sx, x, cx</code>；离子阱：<code>rx, ry, rz, xx</code>），编译器负责翻译。</p>
+<hr />
+<h2 id="6">6. 核心算法与完整推导（配三支动画）</h2>
+<blockquote>
+<p>量子算法的<strong>通用四段式</strong>（背下来）：<strong>制备初态 → H 造叠加 → Oracle 相位标记 → 干涉读出</strong>。
+所有门电路算法都是这四步的变体。加速的来源永远是把答案编码进<strong>相位</strong>、再用干涉把它搬到<strong>振幅</strong>上。</p>
+</blockquote>
+<h3 id="61-oracle">6.1 Oracle 是什么</h3>
+<p>黑盒查询门，实现 <span class="math">f(x)</span> 的查询，两种形态：</p>
+<ul>
+<li><strong>布尔 oracle</strong>：<span class="math">|x⟩|y⟩ → |x⟩|y⊕ f(x)⟩</span>（改辅助位）；</li>
+<li><strong>相位 oracle</strong>：<span class="math">|x⟩ → (−1)^f(x)|x⟩</span>（只翻相位，不改输入，更常用）。</li>
+</ul>
+<p>实现上通常需要辅助位 + "计算—复制—反计算（uncompute）"结构。<strong>评估一个算法是否可行，先算 oracle 的门数</strong>——它是成本大头。</p>
+<h3 id="62-deutschjozsa">6.2 Deutsch–Jozsa：一次查询判断"常量还是平衡"</h3>
+<p><strong>问题</strong>：<span class="math">f:{0,1}ⁿ→{0,1}</span>，承诺要么常量、要么平衡（一半 0 一半 1）。经典最坏要 <span class="math">2ⁿ⁻¹+1</span> 次查询，量子 <strong>1 次</strong>。</p>
+<p><strong>推导（逐步）</strong>：</p>
+<ol>
+<li>输入寄存器全 H：<span class="math">1/√(2ⁿ)Σₓ |x⟩</span>；</li>
+<li>相位 oracle：<span class="math">1/√(2ⁿ)Σₓ (−1)^f(x)|x⟩</span>；</li>
+<li>再过一层 H。H 的作用是 <span class="math">1/√(2ⁿ)Σₓ(−1)^(a·x)|x⟩ → |a⟩</span>（把相位串还原成基态），于是每个基态 <span class="math">|y⟩</span> 的振幅为</li>
+</ol>
+<div class="dmath">α_y = 1/(2ⁿ)Σₓ (−1)^f(x)(−1)^(x·y)</div>
+<ol>
+<li>关键看 <span class="math">y=0ⁿ</span>（全零串）的振幅：<span class="math">α_(()0ⁿ) = 1/(2ⁿ)Σₓ (−1)^f(x)</span>。</li>
+<li>f 常量：求和 = <span class="math">± 2ⁿ</span>，<span class="math">α_(()0ⁿ)=±1</span> → 测量<strong>必得全 0</strong>；</li>
+<li>f 平衡：正负项恰好相消，<span class="math">α_(()0ⁿ)=0</span> → 全 0 概率为 <strong>0</strong>。</li>
+</ol>
+<p><strong>判据</strong>：测出全 0 ⇔ 常量；否则平衡。一次查询完成。</p>
+<h3 id="63-bernsteinvazirani">6.3 Bernstein–Vazirani：一次问出隐藏比特串</h3>
+<p><span class="math">f(x) = a· x mod 2</span>（隐藏串 a 的逐位与）。电路与 DJ 完全同构，测量结果就是 <strong>a 本身</strong>。推导：<span class="math">Σₓ(−1)^(a·x)(−1)^(x·y)</span> 在 <span class="math">y=a</span> 时取最大值 <span class="math">2ⁿ</span>，其余为 0。经典要问 n 次，量子 1 次。</p>
+<blockquote>
+<p>不违反 Holevo 界限的原因：问题结构（线性）已知，量子机利用结构一次性提取。</p>
+</blockquote>
+<h3 id="64-grover-02">6.4 Grover：振幅放大（★ 动画 02 逐帧推演）</h3>
+<figure class="video-card"><figcaption><b>动画 02</b> · Grover 振幅放大 · 30 秒</figcaption><video controls preload="metadata" src="../assets/videos/02_Grover振幅放大.mp4"></video><p class="vnote">N=8 的完整数值推演：翻相位 → 算均值 → 绕过均值镜像。每一步的数都能在本节推导里找到。</p></figure>
+
+<p><strong>问题</strong>：N=2ⁿ 个无序条目找一个目标。经典平均 N/2 次，Grover 约 <span class="math">(π/4)·√N</span> 次。</p>
+<p><strong>三个组件</strong>：叠加制备、oracle 相位翻转、扩散算子 <span class="math">D = 2|s⟩⟨ s|− I</span>（关于均值翻转）。</p>
+<p><strong>完整推导（N=8、目标 |011⟩ 的实数演示）</strong>：</p>
+<ol>
+<li>均匀叠加：<span class="math">αₓ = 1/√8 = 0.354</span>（8 个）；</li>
+<li>Oracle：<span class="math">α₀₁₁: +0.354 → −0.354</span>，概率不变；</li>
+<li>均值：<span class="math">ᾱ = (7×0.354 + (−0.354))/8 = 0.265</span>；</li>
+<li>扩散 <span class="math">α'ₓ = 2ᾱ − αₓ</span>：</li>
+<li>目标：<span class="math">2×0.265+0.354 = 0.884</span> → <span class="math">P = 78.1%</span></li>
+<li>其余：<span class="math">0.530−0.354 = 0.177</span></li>
+<li>重复迭代，振幅按 <span class="math">sin((2k+1)θ/2)</span> 推进，其中</li>
+</ol>
+<div class="dmath">θ = 2·arcsin(1/√N)    (N=8: θ=41.4°)</div>
+<ol>
+<li>最优迭代次数与成功率：</li>
+</ol>
+<div class="dmath">R* = ⌊ π/(4θ) − 1/2 ⌋ ≈ (π/4)·√N          P(k) = sin²((2k+1)θ/2)</div>
+
+<p><strong>N=8 数值表（面试能背出来非常加分）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>迭代次数 k</th>
+<th>目标振幅</th>
+<th>成功率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0.354</td>
+<td>12.5%</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0.884</td>
+<td>78.1%</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.973</td>
+<td><strong>94.6%</strong> ← 最优</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.575</td>
+<td>33.0%（转过头了）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>面试高频坑</strong>：迭代不是越多越好，超过最优值振幅会回落。必须按 <span class="math">⌊(π/4)·√N⌋</span> 卡准。</p>
+<h3 id="65-qft">6.5 QFT：量子傅里叶变换（发动机）</h3>
+<div class="dmath">QFT: |x⟩ → (1/√N)·Σ_y e^(2πi·xy/N)|y⟩          (N = 2ⁿ)</div>
+
+<ul>
+<li><strong>核心作用一句话：把相位信息转换成振幅信息</strong>。测量只能读振幅，所以所有"答案藏在相位里"的算法最后都要靠它读出。</li>
+<li>电路：逐比特 H + 递进受控相位门 <span class="math">R_(k)</span>（相位 <span class="math">2π/2^(k)</span>）+ 末端 SWAP 逆序。</li>
+<li>复杂度：经典 FFT <span class="math">O(Nlog N)</span>，QFT <span class="math">O(n²) = O(log² N)</span>——<strong>指数级门数优势</strong>。</li>
+<li><strong>最大误区</strong>：QFT 输出的是振幅分布，测量只给一个结果，<strong>不能像 FFT 那样读出完整频谱</strong>。</li>
+</ul>
+<h3 id="66-qpe-03">6.6 QPE：相位估计（★ 动画 03 逐步推演）</h3>
+<figure class="video-card"><figcaption><b>动画 03</b> · QPE 相位估计 · 36 秒</figcaption><video controls preload="metadata" src="../assets/videos/03_QPE相位估计.mp4"></video><p class="vnote">φ=1/8 的四步走查：造叠加 → 受控演化（相位反冲）→ 逆 QFT → 测量读出 001。</p></figure>
+
+<p><strong>问题</strong>：已知 <span class="math">U|u⟩ = e^(2πiφ)|u⟩</span>，估 <span class="math">φ</span>。</p>
+<p><strong>四步推导（φ=1/8、3 个辅助比特）</strong>：</p>
+<ol>
+<li>辅助寄存器全 H：<span class="math">1/√8Σⱼ|j⟩</span>；</li>
+<li>受控 <span class="math">U^(()2^(k))</span>（相位反冲）：<span class="math">1/√8Σⱼ e^(2πiφj)|j⟩</span>；</li>
+<li>逆 QFT。<span class="math">|y⟩</span> 的振幅为</li>
+</ol>
+<div class="dmath">β_y = 1/(2ⁿ)Σⱼ (j = 0…2ⁿ−1) e^(2πi·j·(φ−y/2ⁿ))</div>
+<p>这是一个等比级数求和：当 <span class="math">2ⁿφ</span> 恰为整数 <span class="math">y<em></span> 时，<span class="math">y=y</em></span> 的振幅为 1，其余全部相消 → 输出 <span class="math">|y<em>⟩</span>；
+4. 测量得 <span class="math">y</em> = 001</span>，即 <span class="math">φ = y*/2ⁿ = 1/8</span>。</p>
+<p><strong>精度</strong>：n 位辅助比特给 n 位精度（误差 <span class="math">O(2⁻ⁿ)</span>）；φ 不是精确二进制小数时按邻近值分布，需<strong>连分数</strong>还原。</p>
+<p><strong>用途</strong>：Shor 求周期、量子化学求基态能量（HHL、量子模拟的共同内核）。</p>
+<h3 id="67-shor">6.7 Shor：把分解变成求周期（完整链路）</h3>
+<p><strong>四步流程</strong>：</p>
+<ol>
+<li><strong>经典预处理</strong>：N 偶数或完全幂直接解；否则随机选 <span class="math">a</span>，查 <span class="math">gcd(a,N)</span>（不为 1 就白捡一个因子）；</li>
+<li><strong>量子求周期</strong>：用 QPE 估计 <span class="math">U_(a)|y⟩ = |ay mod N⟩</span> 的本征相位，得到 <span class="math">φ ≈ s/r</span>，其中 r 是 <span class="math">a^(x) mod N</span> 的周期；</li>
+<li><strong>连分数后处理</strong>：把近似小数 <span class="math">φ</span> 还原成 <span class="math">s/r</span>，得到 r；</li>
+<li><strong>经典收尾</strong>：若 r 偶数且 <span class="math">a^(r/2)≠ −1 ±od N</span>，则</li>
+</ol>
+<div class="dmath">gcd(a^(r/2)−1, N),     gcd(a^(r/2)+1, N)</div>
+<p>给出非平凡因子。不满足就换 a 重来（成功概率够高，几次即可）。</p>
+<p><strong>手算实例（N=15, a=7，面试可直接演示）</strong>：
+<span class="math">7¹=7, 7²=49≡4, 7³≡13, 7⁴≡1 ±od{15}</span> → 周期 r=4（偶数）✓；<span class="math">a^(r/2)=7²=4≠14</span> ✓；
+<span class="math">gcd(4−1,15)=gcd(3,15)=3</span>，<span class="math">gcd(4+1,15)=gcd(5,15)=5</span> → <strong>15 = 3 × 5</strong>。</p>
+<p><strong>复杂度</strong>：经典数域筛法亚指数，Shor <span class="math">O(n³)</span> 多项式。<strong>现实意义</strong>：需要数千逻辑比特 + 百万门，当前机器跑不动；但"RSA → 抗量子密码（PQC）迁移"是被广泛接受的判断——答到这里就是加分项。</p>
+<p><strong>实现层三个细节（高级面试点）</strong>：模幂必须写成置换形式 <span class="math">(x,y)→(x, y· a^(x) mod N)</span> 保证酉性；读出口是 QFT† 不是 QFT；连分数是纯经典步骤但最容易漏写。</p>
+<h3 id="68-vqe-qaoanisq">6.8 VQE / QAOA：NISQ 时代的主力</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>VQE</th>
+<th>QAOA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>目标</td>
+<td>求哈密顿量基态能量（化学/材料）</td>
+<td>近似解组合优化（MaxCut、调度、组合投资）</td>
+</tr>
+<tr>
+<td>结构</td>
+<td>参数化电路 ansatz + 经典优化器</td>
+<td>交替的代价层与混合层，层数 p 可调</td>
+</tr>
+<tr>
+<td>循环</td>
+<td>量子机算期望值 → 经典机调参 → 反复</td>
+<td>同左</td>
+</tr>
+</tbody>
+</table>
+<p><strong>为什么现在用它</strong>：电路浅、可用经典优化器补足、适配含噪声设备。<strong>局限</strong>：贫瘠高原（梯度消失）、大量采样、尚无确证的量子优势。</p>
+<h3 id="69">6.9 算法全景对照表</h3>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>加速类型</th>
+<th>解决什么</th>
+<th>实用前景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deutsch–Jozsa</td>
+<td>指数（查询）</td>
+<td>承诺问题</td>
+<td>教学示范</td>
+</tr>
+<tr>
+<td>Bernstein–Vazirani</td>
+<td>n→1</td>
+<td>求隐藏串</td>
+<td>教学示范</td>
+</tr>
+<tr>
+<td>Simon</td>
+<td>指数</td>
+<td>求周期</td>
+<td>Shor 前奏</td>
+</tr>
+<tr>
+<td>Grover</td>
+<td>平方 √N</td>
+<td>无结构搜索</td>
+<td>可加速穷举类任务</td>
+</tr>
+<tr>
+<td>QFT</td>
+<td>门数指数减少</td>
+<td>相位↔振幅</td>
+<td>各算法组件</td>
+</tr>
+<tr>
+<td>QPE</td>
+<td>多项式</td>
+<td>本征相位/能量</td>
+<td>化学、模拟核心</td>
+</tr>
+<tr>
+<td>Shor</td>
+<td>指数</td>
+<td>整数分解</td>
+<td>需大规模纠错机</td>
+</tr>
+<tr>
+<td>VQE/QAOA</td>
+<td>启发式</td>
+<td>化学、优化</td>
+<td>NISQ 主力</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7">7. 协议：隐形传态与超密编码</h2>
+<h3 id="71">7.1 隐形传态：逐步振幅推导（面试要求能白板推）</h3>
+<p><strong>目标</strong>：把 Alice 的未知态 <span class="math">|ψ⟩ = α|0⟩ + β|1⟩</span> 传给 Bob（不复制、不超光速）。</p>
+<p><strong>资源</strong>：1 对贝尔纠缠 + 2 个经典比特。三比特记号：q0 = 待传态、q1 = Alice 半、q2 = Bob 半。</p>
+<p><strong>推导</strong>（每一行都可逐项验证）：</p>
+<ol>
+<li>三比特总态：</li>
+</ol>
+<div class="dmath">1/√2(α|000⟩ + α|011⟩ + β|100⟩ + β|111⟩)</div>
+<ol>
+<li>Alice 做 CNOT(q0→q1)（q0=1 时翻 q1）：</li>
+</ol>
+<div class="dmath">1/√2(α|000⟩ + α|011⟩ + β|110⟩ + β|101⟩)</div>
+<ol>
+<li>Alice 对 q0 做 H，逐项展开并按测量结果 (q0q1) 归组：</li>
+</ol>
+<div class="dmath">1/2[ |00⟩(α|0⟩+β|1⟩) + |01⟩(α|1⟩+β|0⟩) + |10⟩(α|0⟩−β|1⟩) + |11⟩(α|1⟩−β|0⟩) ]</div>
+<ol>
+<li>Alice 测量 q0、q1，四种结果穷尽所有可能，Bob 的态对应：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Alice 测得</th>
+<th>Bob 的态</th>
+<th>Bob 的校正</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>00</td>
+<td><span class="math"></td>
+<td>ψ⟩</span></td>
+</tr>
+<tr>
+<td>01</td>
+<td><span class="math">X</td>
+<td>ψ⟩</span></td>
+</tr>
+<tr>
+<td>10</td>
+<td><span class="math">Z</td>
+<td>ψ⟩</span></td>
+</tr>
+<tr>
+<td>11</td>
+<td><span class="math">XZ</td>
+<td>ψ⟩</span></td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>泡利门自逆（<span class="math">X²=Z²=I</span>），所以 Bob 总能恢复 <span class="math">|ψ⟩</span>。<strong>这也解释了为什么恰好需要 2 个经典比特</strong>：4 种情况 = 2 比特信息。</li>
+</ol>
+<p><strong>三个必破误解</strong>：不能超光速（必须等经典比特）；不是复制（Alice 的原态在测量时塌缩销毁）；经典信道不可省。</p>
+<h3 id="72">7.2 超密编码（同一份纠缠，反过来用）</h3>
+<p>Alice 想传 2 个经典比特，只发 1 个量子比特。先共享贝尔对，然后按消息对己方半比特做操作：</p>
+<table>
+<thead>
+<tr>
+<th>消息</th>
+<th>操作</th>
+<th>联合态变为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>00</td>
+<td>I</td>
+<td><span class="math">(</td>
+</tr>
+<tr>
+<td>01</td>
+<td>X</td>
+<td><span class="math">(</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Z</td>
+<td><span class="math">(</td>
+</tr>
+<tr>
+<td>11</td>
+<td>ZX</td>
+<td><span class="math">(</td>
+</tr>
+</tbody>
+</table>
+<p>Bob 用贝尔基测量（CNOT+H+测量）一次区分四种态。合法性来自：纠缠是<strong>预先共享的资源</strong>，不计入本次通信（Holevo 界限只约束本次发送的量子比特）。</p>
+<p><strong>两个协议的价格表（面试一句话）</strong>：隐形传态 = 1 ebit + 2 cbit 传 1 个量子态；超密编码 = 1 ebit + 1 qubit 传 2 cbit。</p>
+<hr />
+<h2 id="8">8. 噪声、退相干与纠错（面试的工程分水岭）</h2>
+<h3 id="81">8.1 噪声从哪来</h3>
+<ul>
+<li><strong>T1（弛豫）</strong>：<span class="math">|1⟩</span> 自发衰变回 <span class="math">|0⟩</span> 的时间常数；</li>
+<li><strong>T2（退相干）</strong>：相对相位信息丢失的时间常数；</li>
+<li>门误差：单比特门保真度超导约 99.9%、离子阱 99.99%；两比特门显著更差；</li>
+<li>读出误差与串扰（crosstalk）。</li>
+</ul>
+<p><strong>退相干的数学本质</strong>：环境与系统纠缠 → 约化密度矩阵非对角元衰减 → Bloch 矢量向球心收缩 → 叠加变混合。密度矩阵 <span class="math">ρ = 1/2(I + xX + yY + zZ)</span>，退相干就是 (x,y,z) 长度缩短。</p>
+<h3 id="82">8.2 纠错的最小例子（三比特比特翻转码）</h3>
+<p>编码：<span class="math">|0⟩→|000⟩</span>，<span class="math">|1⟩→|111⟩</span>。任意一位翻转（X 错误）后用两个辅助位做奇偶校验（稳定子 <span class="math">Z₁Z₂</span>、<span class="math">Z₂Z₃</span>），定位错误位并修复。局限：<strong>只纠 X 错、不纠 Z 错</strong>，且无法纠"振幅任意小"的错误——引出真正的方案。</p>
+<h3 id="83">8.3 表面码与阈值定理（知道结论即可）</h3>
+<ul>
+<li>表面码（surface code）：二维近邻耦合即可实现，码距 d 用约 <span class="math">2d²</span> 个物理比特纠 1 个逻辑比特、可纠 <span class="math">⌊(d−1)/2⌋</span> 个任意错误；</li>
+<li><strong>阈值定理</strong>：物理错误率低于阈值（表面码约 1%）时，加大码距可指数级压低逻辑错误率；</li>
+<li>代价：1 逻辑比特 ≈ 1000 物理比特——这就是"容错量子计算还需多年"的定量原因。</li>
+</ul>
+<hr />
+<h2 id="9-qiskit">9. 动手：Qiskit 三步法（面试现场可能让你写）</h2>
+<h3 id="91">9.1 三步框架</h3>
+<p><strong>写电路 → 选后端 → 取计数</strong>：</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">qiskit</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuantumCircuit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_aer</span><span class="w"> </span><span class="kn">import</span> <span class="n">AerSimulator</span>
+
+<span class="c1"># 1) 写电路：2 个量子比特 + 2 个经典比特</span>
+<span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>                     <span class="c1"># H 门造叠加</span>
+<span class="n">qc</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>                 <span class="c1"># CNOT：控制 q0，目标 q1</span>
+<span class="n">qc</span><span class="o">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>  <span class="c1"># 末端测量，写入经典寄存器</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">qc</span><span class="o">.</span><span class="n">draw</span><span class="p">())</span>
+
+<span class="c1"># 2) 选后端（本地模拟器免费，真机要排队）</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">AerSimulator</span><span class="p">()</span>
+
+<span class="c1"># 3) 运行并取计数</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1024</span><span class="p">)</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>   <span class="c1"># {&#39;00&#39;: ~512, &#39;11&#39;: ~512}，01/10 不出现</span>
+</code></pre></div>
+
+<p><strong>关键概念</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>shots</td>
+<td>重复运行次数，决定统计精度（1024 是惯例值）</td>
+</tr>
+<tr>
+<td>counts</td>
+<td>结果字典：比特串 → 次数</td>
+</tr>
+<tr>
+<td>measure</td>
+<td>不写就没有 counts；且必须在末端</td>
+</tr>
+<tr>
+<td>比特序</td>
+<td>Qiskit 是小端序，<code>'11'</code> 左边是高位比特——初学最常翻车的点</td>
+</tr>
+</tbody>
+</table>
+<h3 id="92">9.2 贝尔态实验（最该背的实验）</h3>
+<p>理想结果：<code>00</code> 与 <code>11</code> 各约 50%，<strong>不出现</strong> 01/10。真机上出现少量 01/10 不是代码错，而是退相干与门误差——"本不该出现的项"恰好是评估设备质量的最直观指标。</p>
+<h3 id="93">9.3 真机提交流程（四步）</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 列设备 → 挑最空闲 → transpile 编译 → 提交取 job_id</span>
+<span class="n">backends</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">backends</span><span class="p">(</span><span class="n">operational</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">simulator</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">backend</span> <span class="o">=</span> <span class="n">least_busy</span><span class="p">(</span><span class="n">backends</span><span class="p">)</span>
+<span class="n">qc_t</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">optimization_level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qc_t</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1024</span><span class="p">)</span>
+</code></pre></div>
+
+<ul>
+<li><strong>transpile 必做</strong>：把你的电路翻译成该设备的原生门集与拓扑；拓扑不匹配时自动插 SWAP，电路变深；</li>
+<li>判断可行性：<code>print(qc.depth(), '-&gt;', qc_t.depth())</code>，深度暴涨说明算法在这台机器上跑不动；</li>
+<li>调试纪律：<strong>先模拟器 → 加噪声模型 → 再上真机</strong>，省配额。</li>
+</ul>
+<hr />
+<h2 id="10">10. 硬件与行业（面试验证"视野"的部分）</h2>
+<table>
+<thead>
+<tr>
+<th>路线</th>
+<th>状态</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>超导</td>
+<td>已商用（IBM、谷歌、国内多家）</td>
+<td>微波控制、10ns 级门速度快、需 10mK 极低温、保真度 99.9%</td>
+</tr>
+<tr>
+<td>离子阱</td>
+<td>已商用</td>
+<td>激光门、保真度 99.99%、全连通、门速度相对慢</td>
+</tr>
+<tr>
+<td>硅量子点</td>
+<td>发展中</td>
+<td>复用 CMOS 工艺积累</td>
+</tr>
+<tr>
+<td>拓扑量子</td>
+<td>发展中（微软主投）</td>
+<td>理论抗噪优势大，实现难度高</td>
+</tr>
+<tr>
+<td>量子退火（D-Wave）</td>
+<td>已商用</td>
+<td>专用机，只解 QUBO 优化问题，不是通用门电路机器</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键数字</strong>：单门 10ns → 深度上限约 2 万层；1 逻辑比特 ≈ 1000 物理比特；Shor 需数千逻辑比特。</p>
+<p><strong>面试收尾话术</strong>：被问"量子计算什么时候有用"——分两层答：眼下（NISQ）只有变分算法的探索性价值；真正的密码学级应用要等容错机（数千逻辑比特），而"现有 RSA 迁移到抗量子密码"是已经确定的工程动作。</p>
+<hr />
+<h2 id="11-25">11. 面试题库（25 题，先自答再看要点）</h2>
+<h3 id="_2">基础层</h3>
+<ol>
+<li>
+<p><strong>什么是量子比特？和经典比特的区别？</strong>
+   → 二维复向量 <span class="math">α|0⟩+β|1⟩</span>，<span class="math">|α|²+|β|²=1</span>；经典比特只能取 0 或 1，量子比特可处于叠加，且测量是概率性的。</p>
+</li>
+<li>
+<p><strong>叠加是什么？"并行计算所有可能"对吗？</strong>
+   → 线性组合仍是合法态；不对。测量只给一个随机结果，加速靠干涉。</p>
+</li>
+<li>
+<p><strong>为什么量子门必须是酉矩阵？</strong>
+   → 演化要保概率归一且可逆：<span class="math">U^(†) U=I</span> ⇒ 保内积、可逆、保概率。</p>
+</li>
+<li>
+<p><strong>纠缠和经典关联的区别？</strong>
+   → 贝尔态不可分解为乘积态；两边各自完全随机但结果必然一致；CHSH 2.83 &gt; 经典 2 证明不能用局部隐变量解释。</p>
+</li>
+<li>
+<p><strong>测量后发生什么？为什么必须跑很多 shots？</strong>
+   → 塌缩到本征态、叠加被破坏；单次结果随机，只能统计分布。</p>
+</li>
+<li>
+<p><strong>不可克隆定理说明什么？</strong>
+   → 量子态不能备份；这是量子密钥分发安全性的根源，也解释了隐形传态为何是"移动"不是"复制"。</p>
+</li>
+<li>
+<p><strong>Bloch 球上，球面/球内/球心各代表什么？</strong>
+   → 纯态 / 混合态 / 完全混合；门=旋转，测量=投影。</p>
+</li>
+<li>
+<p><strong>n 个比特的状态空间多大？</strong>
+   → 2ⁿ 维复向量空间；50 比特 ≈ 10¹⁵ 个复数，经典模拟不可行。</p>
+</li>
+</ol>
+<h3 id="_3">门与电路层</h3>
+<ol>
+<li>
+<p><strong>写出 H、X、Z、T、CNOT 的矩阵。</strong>
+   → 见第 5 章，必须当场默写。</p>
+</li>
+<li>
+<p><strong>X 和 Z 的区别？</strong>
+    → X 交换振幅（改测量结果），Z 只翻相位（不改测量结果）。</p>
+</li>
+<li>
+<p><strong>H·H = ? HZH = ?</strong>
+    → <span class="math">H²=I</span>；<span class="math">HZH=X</span>（中间的相位被换成了比特翻转）。</p>
+</li>
+<li>
+<p><strong>为什么经典与门不能直接搬到量子电路？</strong>
+    → 两进一出丢信息，违反酉性；用 Toffoli + 置 0 辅助位实现可逆版本。</p>
+</li>
+<li>
+<p><strong>深度和门数各决定什么？优化先保谁？</strong>
+    → 深度决定能否在相干时间内跑完，门数决定总错误量；先降深度。</p>
+</li>
+<li>
+<p><strong>通用门集是什么？T 门为什么特殊？</strong>
+    → 单比特门+CNOT 通用；工程版 Clifford+T，T 是唯一非 Clifford 门，纠错开销最大（magic state 蒸馏）。</p>
+</li>
+<li>
+<p><strong>什么是 transpile？为什么深度可能暴涨？</strong>
+    → 映射到原生门集与拓扑；拓扑不匹配时编译器自动插 SWAP（每个 SWAP = 3 个 CNOT）。</p>
+</li>
+</ol>
+<h3 id="_4">算法层</h3>
+<ol>
+<li>
+<p><strong>量子算法的通用四段式？</strong>
+    → 制备 → H 造叠加 → oracle 相位标记 → 干涉读出。</p>
+</li>
+<li>
+<p><strong>Oracle 的两种形态？哪个更常用？</strong>
+    → 布尔型改辅助位、相位型 <span class="math">(−1)^f(x)</span> 只翻相位；相位型常用，因为不改输入便于干涉。</p>
+</li>
+<li>
+<p><strong>推一遍 DJ 算法。</strong>
+    → 见 6.2，关键是全零振幅 <span class="math">1/(2ⁿ)Σ(−1)^f(x)</span>：常量 ±1、平衡 0。</p>
+</li>
+<li>
+<p><strong>Grover 三组件？迭代次数怎么算？多了会怎样？</strong>
+    → 叠加/oracle/扩散；<span class="math">R≈(π/4)·√N</span>（<span class="math">P(k)=sin²((2k+1)θ/2)</span>，<span class="math">θ=2·arcsin(1/√N)</span>）；超过最优值振幅回落。</p>
+</li>
+<li>
+<p><strong>QFT 的作用？为什么不能当 FFT 用？</strong>
+    → 相位→振幅；测量只给一个结果，读不出完整频谱。</p>
+</li>
+<li>
+<p><strong>推一遍 QPE。</strong>
+    → 见 6.6：H 层 → 受控 <span class="math">U^(()2^(k))</span> 相位反冲 → QFT† → 测 <span class="math">y=2ⁿφ</span>。</p>
+</li>
+<li>
+<p><strong>Shor 四步 + 手算 N=15。</strong>
+    → 预处理 / QPE 求周期 / 连分数 / gcd；a=7: r=4，gcd(3,15)=3、gcd(5,15)=5。</p>
+</li>
+<li>
+<p><strong>VQE/QAOA 为什么是当下主力？局限？</strong>
+    → 电路浅、经典优化器补足、适配 NISQ；贫瘠高原与大量采样，尚无确证优势。</p>
+</li>
+</ol>
+<h3 id="_5">工程与视野层</h3>
+<ol>
+<li>
+<p><strong>真机上贝尔态出现 01/10 说明什么？</strong>
+    → 噪声与门误差；"不该出现的项"是设备质量的直观度量。</p>
+</li>
+<li>
+<p><strong>NISQ 是什么？容错量子计算还差什么？</strong>
+    → 含噪声中等规模量子时代；差在纠错开销（1 逻辑 ≈ 1000 物理）与深度上限，阈值定理保证了路线可行。</p>
+</li>
+</ol>
+<hr />
+<h2 id="12_1">12. 公式速查表（考前一页）</h2>
+<table>
+<thead>
+<tr>
+<th>主题</th>
+<th>公式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>态与归一化</td>
+<td><span class="math"></td>
+</tr>
+<tr>
+<td>Bloch 球参数化</td>
+<td><span class="math">cos(θ/2)·</td>
+</tr>
+<tr>
+<td>测量概率</td>
+<td><span class="math">P(aᵢ)=</td>
+</tr>
+<tr>
+<td>酉 / 厄米</td>
+<td><span class="math">U^(†) U=I</span>（门）；<span class="math">A^(†)=A</span>（观测量，本征值实数）</td>
+</tr>
+<tr>
+<td>张量积维度</td>
+<td><span class="math">dim(A⊗ B)=dim A×dim B</span>；n 比特 = <span class="math">2ⁿ</span> 维</td>
+</tr>
+<tr>
+<td>旋转门</td>
+<td><span class="math">R_P(θ)=e^(−iθP/2)=cos(θ/2) I − i·sin(θ/2) P</span></td>
+</tr>
+<tr>
+<td>ZYZ 分解</td>
+<td><span class="math">U=e^(iα)R_(z)(β)R_(y)(γ)R_(z)(δ)</span></td>
+</tr>
+<tr>
+<td>贝尔态</td>
+<td><span class="math">1/√2(</td>
+</tr>
+<tr>
+<td>CHSH</td>
+<td>经典 ≤ 2，量子 ≤ <span class="math">2√2</span></td>
+</tr>
+<tr>
+<td>DJ 判据</td>
+<td><span class="math">α_(()0ⁿ)=1/(2ⁿ)Σₓ(−1)^f(x)</span>：常量 ±1，平衡 0</td>
+</tr>
+<tr>
+<td>Grover</td>
+<td><span class="math">θ=2·arcsin(1/√N)</span>，<span class="math">R≈(π/4)·√N</span>，<span class="math">P(k)=sin²((2k+1)θ/2)</span></td>
+</tr>
+<tr>
+<td>扩散算子</td>
+<td><span class="math">D=2</td>
+</tr>
+<tr>
+<td>QFT</td>
+<td><span class="math"></td>
+</tr>
+<tr>
+<td>QPE</td>
+<td>读出 <span class="math">y=2ⁿφ</span>，精度误差 <span class="math">O(2⁻ⁿ)</span></td>
+</tr>
+<tr>
+<td>Shor 收尾</td>
+<td>r 偶且 <span class="math">a^(r/2)≠−1</span>：<span class="math">gcd(a^(r/2)±1, N)</span></td>
+</tr>
+<tr>
+<td>深度上限</td>
+<td>深度 × 单门时间 ≤ 相干时间（10ns 门 / 200µs 相干 ≈ 2 万层）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="13">13. 术语速查</h2>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>一句话</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ket / bra</td>
+<td>列向量 / 其共轭转置</td>
+</tr>
+<tr>
+<td>概率幅</td>
+<td>复数振幅，模方是概率，可干涉</td>
+</tr>
+<tr>
+<td>酉矩阵</td>
+<td>U†U=I，量子门</td>
+</tr>
+<tr>
+<td>厄米矩阵</td>
+<td>A†=A，可观测量</td>
+</tr>
+<tr>
+<td>张量积 ⊗</td>
+<td>拼装多比特空间，维度相乘</td>
+</tr>
+<tr>
+<td>Bloch 球</td>
+<td>单比特态的几何表示</td>
+</tr>
+<tr>
+<td>纠缠</td>
+<td>不可分解的联合态</td>
+</tr>
+<tr>
+<td>oracle</td>
+<td>黑盒查询门，给答案打相位标记</td>
+</tr>
+<tr>
+<td>相位反冲</td>
+<td>受控 U 把目标态的相位"踢"到控制位上</td>
+</tr>
+<tr>
+<td>ancilla</td>
+<td>辅助比特，配合 uncompute 使用</td>
+</tr>
+<tr>
+<td>shots</td>
+<td>重复运行次数</td>
+</tr>
+<tr>
+<td>counts</td>
+<td>结果字典（比特串→次数）</td>
+</tr>
+<tr>
+<td>transpile</td>
+<td>编译到原生门集与拓扑</td>
+</tr>
+<tr>
+<td>coupling map</td>
+<td>硬件连通图</td>
+</tr>
+<tr>
+<td>T1 / T2</td>
+<td>弛豫 / 退相干时间</td>
+</tr>
+<tr>
+<td>稳定子</td>
+<td>纠错码的校验算符</td>
+</tr>
+<tr>
+<td>表面码</td>
+<td>二维近邻纠错码，码距 d 纠 (d−1)/2 个错</td>
+</tr>
+<tr>
+<td>NISQ</td>
+<td>含噪声中等规模量子时代</td>
+</tr>
+<tr>
+<td>ebit</td>
+<td>一份纠缠资源</td>
+</tr>
+<tr>
+<td>Holevo 界限</td>
+<td>1 个量子比特单次通信可访问信息 ≤ 1 比特</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="14">14. 三支动画对应的学习点</h2>
+<table>
+<thead>
+<tr>
+<th>动画</th>
+<th>文件</th>
+<th>覆盖知识点</th>
+<th>建议动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01 量子门与态演化</td>
+<td><code>../assets/videos/01_量子门与态演化.mp4</code>（30s）</td>
+<td>I/X/H/Z/S/T 的矩阵乘法、概率 vs 相位、干涉的成因</td>
+<td>跟着画面手算一遍矩阵×向量</td>
+</tr>
+<tr>
+<td>02 Grover 振幅放大</td>
+<td><code>../assets/videos/02_Grover振幅放大.mp4</code>（30s）</td>
+<td>oracle、均值、扩散算子、θ 旋转、迭代次数与成功率表</td>
+<td>暂停在每一步，自己先算下一行的数</td>
+</tr>
+<tr>
+<td>03 QPE 相位估计</td>
+<td><code>../assets/videos/03_QPE相位估计.mp4</code>（36s）</td>
+<td>相位反冲、QFT†、二进制小数读出、Shor 链路</td>
+<td>推导卡住时回看第 3 步（受控演化）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>动画的每一步推导都写在画面左侧步骤栏 + 底部公式栏里；本资料第 5、6、7 章是它们的完整文字版。</p>
+</blockquote>
+<hr />
+<h2 id="15-30">15. 30 天备考计划（按周执行）</h2>
+<table>
+<thead>
+<tr>
+<th>周</th>
+<th>目标</th>
+<th>产出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第 1 周</td>
+<td>第 2–4 章：数学五零件 + 五公设 + Bloch 球</td>
+<td>手算题全对；能默写 I/X/H/Z/T/CNOT 矩阵</td>
+</tr>
+<tr>
+<td>第 2 周</td>
+<td>第 5–6.4 章：门手册 + DJ/BV/Grover</td>
+<td>白板推 DJ；Grover N=8 数值表能背</td>
+</tr>
+<tr>
+<td>第 3 周</td>
+<td>第 6.5–8 章：QFT/QPE/Shor + 协议 + 纠错</td>
+<td>白板推 QPE 四步；手算 N=15 分解</td>
+</tr>
+<tr>
+<td>第 4 周</td>
+<td>第 9–10 章 + 题库 + 模拟面试</td>
+<td>Qiskit 跑通贝尔态与 Grover(3 比特)；25 题自答全过</td>
+</tr>
+</tbody>
+</table>
+<p><strong>每天 30 分钟收尾动作</strong>：随机抽 3 道题库题，口头回答并录音回听。</p>
+<div class="foot">依据《给工程师们讲量子计算》课程笔记整理 · 配套 Remotion 动画 3 支 · 生成于 2026-11</div>
+</main></div></body></html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>监督学习常见算法（面试版） | 量子计算学习站</title>
+<style>
+:root{--ink:#0f172a;--body:#334155;--muted:#64748b;--line:#e2e8f0;--bg:#f8fafc;
+--brand:#1e3a8a;--accent:#0d9488;--card:#ffffff;--code-bg:#f1f5f9;}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+color:var(--body);background:var(--bg);line-height:1.75;font-size:16px}
+.topbar{position:sticky;top:0;z-index:9;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
+border-bottom:1px solid var(--line);padding:12px 24px;display:flex;gap:16px;align-items:center}
+.topbar a.home{font-weight:700;color:var(--brand);text-decoration:none}
+.topbar a.back{color:var(--accent);text-decoration:none;font-size:14px}
+.wrap{max-width:960px;margin:0 auto;padding:40px 24px 80px}
+h1{font-size:32px;color:var(--ink);border-bottom:3px solid var(--accent);padding-bottom:12px}
+h2{font-size:24px;color:var(--brand);margin-top:44px;border-left:5px solid var(--accent);padding-left:12px}
+h3{font-size:19px;color:var(--ink);margin-top:28px}
+blockquote{margin:16px 0;padding:12px 18px;background:#eff6ff;border-left:4px solid var(--brand);
+border-radius:0 8px 8px 0;color:#1e40af}
+table{border-collapse:collapse;width:100%;margin:18px 0;background:var(--card);font-size:14.5px}
+th{background:#1e3a8a;color:#fff;padding:9px 12px;text-align:left}
+td{border:1px solid var(--line);padding:8px 12px;vertical-align:top}
+tr:nth-child(even) td{background:#f8fafc}
+code{background:var(--code-bg);padding:2px 6px;border-radius:4px;font-size:.92em;
+font-family:Consolas,Menlo,monospace;color:#0f172a}
+pre{background:#0f172a;color:#e2e8f0;padding:18px;border-radius:10px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+hr{border:none;border-top:1px solid var(--line);margin:40px 0}
+details{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin:12px 0}
+summary{cursor:pointer;font-weight:600;color:var(--brand)}
+ul li,ol li{margin:4px 0}
+strong{color:var(--ink)}
+.dmath{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
+border-radius:8px;padding:14px 20px;margin:14px 0;font-family:Georgia,'Times New Roman',serif;
+font-size:17px;color:var(--ink);overflow-x:auto;white-space:pre-wrap}
+</style></head>
+<body>
+<nav class="topbar">
+  <a class="home" href="../index.html">⚛ 量子计算学习站</a>
+  <a class="back" href="../index.html">← 返回首页</a>
+</nav>
+<div class="wrap"><h1 id="_1">监督学习常见算法 —— 面试版</h1>
+<blockquote>
+<p>覆盖：线性回归 / 逻辑回归 / KNN / 决策树 / SVM / 朴素贝叶斯 / 神经网络 / 集成学习家族（详见同目录《集成学习算法介绍.md》），外加评估指标、过拟合与正则化、交叉验证。每节含：原理 → 公式 → 优缺点 → 适用场景 → 面试高频问答。所有公式为 Unicode 记法，离线可读。</p>
+</blockquote>
+<hr />
+<h2 id="0-30">0. 监督学习是什么（30 秒定位）</h2>
+<p><strong>定义</strong>：训练数据带有"标准答案"（标签 y），模型学习从输入 x 到 y 的映射 f: x → y。
+- <strong>分类</strong>：y 是离散类别（猫/狗、垃圾邮件是/否）
+- <strong>回归</strong>：y 是连续数值（房价、温度）</p>
+<p>与无监督（聚类，无标签）、强化学习（奖励信号）的区分是面试第一问。</p>
+<hr />
+<h2 id="1-linear-regression">1. 线性回归（Linear Regression）</h2>
+<h3 id="_2">原理</h3>
+<p>假设 y 与特征 x 成线性关系，找一条"离所有点最近的直线/超平面"。</p>
+<div class="dmath">ŷ = wᵀx + b</div>
+
+<h3 id="mse">损失函数（均方误差 MSE）</h3>
+<div class="dmath">L(w,b) = \frac{1}{n} Σᵢ (yᵢ − wᵀxᵢ − b)²</div>
+
+<h3 id="_3">两种求解方式（面试必问）</h3>
+<ol>
+<li><strong>正规方程（闭式解）</strong>：w = (XᵀX)⁻¹Xᵀy，一步到位；缺点是矩阵求逆 O(d³)，特征多时算不动，且 XᵀX 需可逆（特征相关/样本少会不可逆）。</li>
+<li><strong>梯度下降</strong>：迭代更新 w ← w − η·∇L，适合大数据；对特征需先归一化。</li>
+</ol>
+<h3 id="_4">评估指标</h3>
+<p>MSE、RMSE、MAE（对异常值更稳）、R²（决定系数，1 为完美拟合）。</p>
+<h3 id="_5">优缺点</h3>
+<ul>
+<li>✅ 简单、可解释（w 就是每个特征的"贡献度"）、训练快、可作基线</li>
+<li>❌ 只能拟合线性关系（可手动加多项式特征缓解）、对异常值敏感（平方损失放大）、特征多重共线性使 w 不稳定</li>
+</ul>
+<h3 id="_6">面试问答</h3>
+<ol>
+<li><strong>最小二乘的几何意义？</strong> 在样本张成的空间中，把 y 向 X 列空间投影，拟合值就是投影。</li>
+<li><strong>多重共线性怎么办？</strong> 岭回归（L2）/ Lasso（L1）正则，或 PCA 降维。</li>
+<li><strong>为什么用平方损失而不用绝对损失？</strong> 平方可导、处处梯度存在，方便优化；MAE 在 0 处不可导但对异常值稳健（Huber 损失是折中）。</li>
+</ol>
+<hr />
+<h2 id="2-logistic-regression">2. 逻辑回归（Logistic Regression）——名字带回归，实为分类</h2>
+<h3 id="_7">原理</h3>
+<p>线性输出经 Sigmoid 压到 (0,1) 作为概率：</p>
+<div class="dmath">σ(z) = \frac{1}{1+e^{−z}},\quad P(y=1|x) = σ(wᵀx+b)</div>
+
+<h3 id="_8">损失函数（交叉熵 / 负对数似然）</h3>
+<div class="dmath">L = −\frac{1}{n} Σᵢ [ yᵢ·\log pᵢ + (1−yᵢ)·\log(1−pᵢ) ]</div>
+
+<p>为什么不用 MSE？① Sigmoid + MSE 非凸，易陷局部最优；② 交叉熵在预测错时梯度大、学得快，且与最大似然等价。</p>
+<h3 id="_9">决策边界</h3>
+<p>P = 0.5 对应 wᵀx + b = 0，是一条<strong>线性边界</strong>（高维为超平面）。</p>
+<h3 id="_10">多分类</h3>
+<p>One-vs-Rest（每个类训练一个二分类器）或 Softmax 回归（多项逻辑回归）。</p>
+<h3 id="_11">优缺点</h3>
+<ul>
+<li>✅ 输出概率、可解释性强（w 与 odds ratio 关联）、训练快、工业界风控/广告 CTR 预估主力、天然支持 L1/L2 正则做特征筛选</li>
+<li>❌ 线性边界，需要手动构造交叉/多项式特征；对特征量纲敏感；类别极度不平衡时需调阈值</li>
+</ul>
+<h3 id="_12">面试问答</h3>
+<ol>
+<li><strong>LR 为什么用交叉熵？</strong> 与 MLE 等价、凸函数有全局最优、误差大时梯度也大。</li>
+<li><strong>特征高度相关会怎样？</strong> w 在相关特征间分摊（不稳定），L1 可挤出冗余。</li>
+<li><strong>怎么处理类别不平衡？</strong> class_weight、过采样/欠采样（SMOTE）、调分类阈值看 PR 曲线而非准确率。</li>
+</ol>
+<hr />
+<h2 id="3-k-knn">3. K 近邻（KNN）</h2>
+<h3 id="_13">原理</h3>
+<p><strong>懒惰学习</strong>：不训练，预测时把测试点周围的 K 个最近邻投票（分类）/平均（回归）。</p>
+<div class="dmath">ŷ = mode\{ y_{(1)}, …, y_{(K)} \}（分类）或 \frac{1}{K} Σ y_{(i)}（回归）</div>
+
+<h3 id="_14">关键要素</h3>
+<ul>
+<li>距离度量：欧氏距离（数值特征）、曼哈顿距离、余弦相似度（文本）</li>
+<li>K 的选择：小 K → 噪声敏感（过拟合）；大 K → 边界过平滑（欠拟合）；常取奇数避免平票，用交叉验证选</li>
+<li>特征必须<strong>归一化</strong>（否则大数值特征主导距离）</li>
+</ul>
+<h3 id="_15">优缺点</h3>
+<ul>
+<li>✅ 零训练成本、天然支持多分类、决策边界灵活</li>
+<li>❌ 预测慢（要和全部训练点算距离，KD 树/球树/近似最近邻可加速）、维度灾难（高维下距离失效）、内存开销大</li>
+</ul>
+<h3 id="_16">面试问答</h3>
+<ol>
+<li><strong>为什么 KNN 是懒惰学习？</strong> 不构建显式模型，把计算推迟到预测时。</li>
+<li><strong>维度灾难怎么缓解？</strong> 降维（PCA）、特征选择、改用 ANN 索引。</li>
+<li><strong>K=1 时训练误差是多少？</strong> 0（每个点最近邻是自己），但测试误差高——体现"训练误差低 ≠ 泛化好"。</li>
+</ol>
+<hr />
+<h2 id="4-decision-tree">4. 决策树（Decision Tree）</h2>
+<h3 id="_17">原理</h3>
+<p>递归地选"信息收益最大"的特征+阈值切分数据，形成 if-else 树。</p>
+<h3 id="_18">分裂准则（必背）</h3>
+<ul>
+<li><strong>信息增益</strong>（ID3）：Gain = H(D) − H(D|A)，其中熵 H = −Σpₖ·log₂pₖ；偏向取值多的特征</li>
+<li><strong>信息增益比</strong>（C4.5）：Gain/D(A)，修正偏置</li>
+<li><strong>基尼系数</strong>（CART，分类）：Gini = 1 − Σpₖ²；<strong>回归树</strong>用 MSE 最小化（叶子取均值）</li>
+</ul>
+<h3 id="_19">剪枝（防过拟合）</h3>
+<ul>
+<li>预剪枝：max_depth、min_samples_split、min_samples_leaf</li>
+<li>后剪枝：代价复杂度剪枝，目标 = 训练误差 + α·|叶子数|</li>
+</ul>
+<h3 id="_20">优缺点</h3>
+<ul>
+<li>✅ 可解释性最强（能画出来讲给业务听）、无需归一化、天然处理类别特征与缺失</li>
+<li>❌ 单树方差极大、极深树必过拟合、对样本扰动敏感</li>
+</ul>
+<h3 id="_21">面试问答</h3>
+<ol>
+<li><strong>为什么信息增益偏向取值多的特征？</strong> 取值多 → 子集更纯 → 条件熵易变小；用增益比惩罚分裂本身的熵。</li>
+<li><strong>ID3/C4.5/CART 区别？</strong> ID3 只支持离散特征+信息增益；C4.5 支持连续+增益比+剪枝；CART 是二叉树、支持回归、用基尼/MSE。</li>
+</ol>
+<hr />
+<h2 id="5-svm">5. 支持向量机（SVM）</h2>
+<h3 id="_22">原理</h3>
+<p>找<strong>间隔最大</strong>的分类超平面 wᵀx+b=0：离两类最近的样本点（<strong>支持向量</strong>）决定边界，"马路修得越宽越稳"。</p>
+<h3 id="_23">优化问题</h3>
+<div class="dmath">\min \frac{1}{2}||w||² \quad s.t.\ yᵢ(wᵀxᵢ+b) ≥ 1</div>
+
+<p>软间隔（允许犯错）加松弛变量 ξᵢ 与惩罚 C：</p>
+<div class="dmath">\min \frac{1}{2}||w||² + C·Σξᵢ \quad s.t.\ yᵢ(wᵀxᵢ+b) ≥ 1−ξᵢ</div>
+
+<h3 id="kernel-trick">核技巧（Kernel Trick）</h3>
+<p>低维线性不可分 → 映射到高维变可分，但不必显式算高维坐标，只算核函数 K(xᵢ,xⱼ) = φ(xᵢ)ᵀφ(xⱼ)：
+- 线性核：特征多、样本多时首选
+- <strong>RBF（高斯核）</strong>：K = exp(−γ||xᵢ−xⱼ||²)，最常用，γ 大 → 边界复杂易过拟合
+- 多项式核</p>
+<h3 id="_24">求解</h3>
+<p>凸二次规划；大规模数据用 <strong>SMO</strong>（坐标上升挑两个变量优化）或线性 SVM 的 Pegasos/LIBLINEAR。</p>
+<h3 id="_25">优缺点</h3>
+<ul>
+<li>✅ 间隔最大化 → 泛化上界好；核方法处理非线性；小样本高维（如文本）表现好；决策只依赖支持向量，对中间点不敏感</li>
+<li>❌ 大数据训练慢（O(n²)~O(n³)）、对缺失与特征量纲敏感、多分类要 OVR/OVO、概率输出需额外校准（Platt 缩放）、调参（C、γ）敏感</li>
+</ul>
+<h3 id="_26">面试问答</h3>
+<ol>
+<li><strong>为什么最大化间隔能提升泛化？</strong> 间隔与 VC 维成反比，间隔越大模型复杂度越低、泛化误差上界越小。</li>
+<li><strong>支持向量是什么？</strong> 恰好落在间隔边界上（或违反约束）的样本；解只由它们决定，删掉非支持向量不影响模型。</li>
+<li><strong>SVM 与 LR 的区别？（高频）</strong> ① 损失：合页损失 vs 交叉熵；② SVM 只关心边界附近样本（支持向量），LR 关注全部样本的对似然；③ SVM 依赖核技巧/距离 → 必须归一化，LR 天然输出概率；④ SVM 无多分类原生支持。</li>
+<li><strong>什么情况下选什么核？</strong> 样本远小于特征数 → 线性核；特征少样本中等 → RBF；线性可分或超大数据 → 线性核 + LIBLINEAR。</li>
+</ol>
+<hr />
+<h2 id="6-naive-bayes">6. 朴素贝叶斯（Naive Bayes）</h2>
+<h3 id="_27">原理</h3>
+<p>由贝叶斯定理反推后验概率：</p>
+<div class="dmath">P(y|x) = \frac{P(y)·P(x|y)}{P(x)} \propto P(y)·Πⱼ P(xⱼ|y)</div>
+
+<p>"朴素" = 假设<strong>特征条件独立</strong>（强假设，但效果常出奇地好）。</p>
+<h3 id="_28">三种变体</h3>
+<ul>
+<li><strong>高斯 NB</strong>：连续特征，假设 P(xⱼ|y) 服从正态分布</li>
+<li><strong>多项式 NB</strong>：文本词频计数（经典垃圾邮件过滤）</li>
+<li><strong>伯努利 NB</strong>：特征二值化（词出现/不出现）</li>
+</ul>
+<h3 id="_29">优缺点</h3>
+<ul>
+<li>✅ 训练极快（只需数频率）、小数据可用、天然多分类、增量学习容易</li>
+<li>❌ 独立性假设常不成立；概率值本身欠校准（比较相对大小可靠）；<strong>零概率问题</strong> → 用拉普拉斯平滑：P = (计数+α)/(总数+α·类别数)</li>
+</ul>
+<h3 id="_30">面试问答</h3>
+<ol>
+<li><strong>为什么朴素假设下还能用好？</strong> 分类只看后验哪个类最大，估计偏差在各类间近似一致，排序仍可能正确。</li>
+<li><strong>拉普拉斯平滑为什么必须？</strong> 某特征值在某类中零出现会把整个乘积归零，训练样本的偶然性不应导致"绝对不可能"。</li>
+</ol>
+<hr />
+<h2 id="7-mlp">7. 神经网络（MLP / 前馈网络）</h2>
+<h3 id="_31">原理</h3>
+<p>多层非线性变换：每层线性变换 + 非线性激活，逐层堆叠拟合任意复杂函数。</p>
+<div class="dmath">h⁽ˡ⁾ = f(W⁽ˡ⁾h⁽ˡ⁻¹⁾ + b⁽ˡ⁾)</div>
+
+<h3 id="_32">关键组件</h3>
+<ul>
+<li><strong>激活函数</strong>：Sigmoid（易梯度消失）、Tanh、<strong>ReLU</strong> = max(0,x)（默认首选，缓解梯度消失、计算快）、Leaky ReLU、GELU</li>
+<li><strong>损失</strong>：分类交叉熵、回归 MSE</li>
+<li><strong>反向传播</strong>：链式法则逐层算梯度，配合梯度下降（SGD/Adam）</li>
+<li><strong>正则化</strong>：L2 权重衰减、Dropout（训练时随机丢弃神经元）、BatchNorm（稳定训练）、早停</li>
+</ul>
+<h3 id="_33">优缺点</h3>
+<ul>
+<li>✅ 万能逼近器、自动学特征表示，图像/文本/语音不可替代</li>
+<li>❌ 数据需求大、算力贵、黑盒难解释、表格数据上常不如 GBDT、超参与架构选择复杂</li>
+</ul>
+<h3 id="_34">面试问答</h3>
+<ol>
+<li><strong>梯度消失/爆炸原因与对策？</strong> 深层连乘小于/大于 1 的梯度；对策：ReLU、BatchNorm、残差连接、合理初始化（He/Xavier）、梯度裁剪。</li>
+<li><strong>为什么表格数据上 GBDT 常赢 MLP？</strong> 树模型对不规则数值、缺失、小样本更稳健，且归纳偏置契合特征交互；MLP 需要大量数据才能学到这些模式。</li>
+</ol>
+<hr />
+<h2 id="8-gbdt-xgboost-lightgbm">8. 集成学习家族（随机森林 / GBDT / XGBoost / LightGBM）</h2>
+<p>本文不展开，<strong>详见同目录《集成学习算法介绍.md》</strong>。面试速记：
+- 随机森林 = Bagging（并行投票，降方差，抗过拟合）
+- GBDT/XGBoost/LightGBM = Boosting（串行补残差/负梯度，降偏差，表格数据之王）
+- 表格数据首选 LightGBM/XGBoost；神经网络是图像/文本/语音的天下。</p>
+<hr />
+<h2 id="9">9. 模型评估与选择（跨算法通用，必考）</h2>
+<h3 id="_35">分类指标</h3>
+<ul>
+<li><strong>混淆矩阵</strong> → Accuracy（整体对的比例，不平衡时失真）、</li>
+<li><strong>Precision 精确率</strong> = TP/(TP+FP)："报出来的里有多少是真"，误报代价高时看它（垃圾邮件）</li>
+<li><strong>Recall 召回率</strong> = TP/(TP+FN)："真阳性里抓回多少"，漏报代价高时看它（癌症筛查、风控）</li>
+<li><strong>F1</strong> = 2PR/(P+R)，两者的调和平均</li>
+<li><strong>ROC/AUC</strong>：FPR-TPR 曲线下面积，AUC=0.5 为随机、=1 完美；类别不平衡时比 Accuracy 可靠</li>
+<li><strong>PR 曲线</strong>：正类稀少时比 ROC 更敏感</li>
+</ul>
+<h3 id="_36">回归指标</h3>
+<p>MSE / RMSE / MAE / R² / MAPE（相对误差，单位无关）</p>
+<h3 id="_37">模型选择方法</h3>
+<ul>
+<li><strong>交叉验证（K-Fold，常 K=5/10）</strong>：数据切 K 份轮流做验证集，平均结果更稳；分层抽样版保持类比例</li>
+<li><strong>训练/验证/测试三分</strong>：验证集调参与早停，测试集只碰一次</li>
+<li><strong>偏差-方差权衡</strong>：训练误差高 → 高偏差（加特征/复杂模型/Boosting）；训练低验证高 → 高方差（更多数据/正则/Bagging/简化模型）</li>
+</ul>
+<h3 id="_38">正则化（防过拟合的通用手段）</h3>
+<ul>
+<li><strong>L2（Ridge/岭回归）</strong>：+λΣw² → 权重整体变小、平滑，不可产生稀疏解，梯度更新 w ← w(1−ηλ) − η·∇</li>
+<li><strong>L1（Lasso）</strong>：+λΣ|w| → 稀疏解、自动特征选择（在 0 处梯度恒为 ±λ）</li>
+<li>直觉：L1 惩罚等值线是菱形，容易撞在坐标轴上（w=0）；L2 是圆形，均匀收缩</li>
+</ul>
+<hr />
+<h2 id="10">10. 算法选型决策表（一页速查）</h2>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>首选</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>需要解释给业务/监管听</td>
+<td>线性回归 / LR / 决策树</td>
+<td>系数或树结构可读</td>
+</tr>
+<tr>
+<td>小数据 + 表格 + 要稳健</td>
+<td>随机森林、朴素贝叶斯</td>
+<td>不易过拟合、快</td>
+</tr>
+<tr>
+<td>中大数据 + 表格 + 追求精度</td>
+<td>LightGBM / XGBoost</td>
+<td>竞赛验证的精度王</td>
+</tr>
+<tr>
+<td>文本分类（词袋特征）</td>
+<td>朴素贝叶斯、LR</td>
+<td>高维稀疏友好</td>
+</tr>
+<tr>
+<td>小样本 + 高维 + 边界清晰</td>
+<td>SVM（RBF 核）</td>
+<td>间隔理论泛化好</td>
+</tr>
+<tr>
+<td>图像/语音/文本表征</td>
+<td>神经网络（CNN/RNN/Transformer）</td>
+<td>自动学特征</td>
+</tr>
+<tr>
+<td>只想要个基线</td>
+<td>LR（分类）/ 线性回归 + 岭正则（回归）</td>
+<td>五分钟出结果</td>
+</tr>
+<tr>
+<td>内存/预测延迟敏感的线上服务</td>
+<td>LR / LightGBM 限深版</td>
+<td>推理开销小</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="11-10">11. 面试综合高频题（速背 10 连）</h2>
+<ol>
+<li><strong>监督 vs 无监督？</strong> 有无标签。</li>
+<li><strong>过拟合怎么判断、怎么治？</strong> 训练好验证差；治：更多数据、正则（L1/L2/Dropout）、简化模型、早停、Bagging、交叉验证确认。</li>
+<li><strong>L1 和 L2 的区别？</strong> 稀疏选择 vs 平滑收缩；几何：菱形撞轴 vs 圆形均匀缩。</li>
+<li><strong>生成模型 vs 判别模型？</strong> 朴素贝叶斯学 P(x|y)P(y)（联合分布），LR/SVM 直接学 P(y|x) 或边界；判别通常精度更高，生成模型能处理缺失/新生成样本。</li>
+<li><strong>SVM 和 LR 选谁？</strong> 小样本高维选 SVM；要概率、大数据、可解释选 LR；两者加核后性能常相近。</li>
+<li><strong>决策树怎么防过拟合？</strong> 预剪枝 + 后剪枝 + 集成化（转成森林/GBDT）。</li>
+<li><strong>类别不平衡全套方案？</strong> 重采样（SMOTE）→ class_weight → 换指标（PR/AUC）→ 调阈值 → 集成加权。</li>
+<li><strong>特征归一化哪些算法必须做？</strong> KNN/SVM/神经网络/LR-with-正则（基于距离或梯度尺度）；树模型不需要。</li>
+<li><strong>交叉验证为什么比单次划分可信？</strong> 每条数据都被验证过、平均掉切分偶然性。</li>
+<li><strong>说一说你如何从头构建一个监督学习项目？</strong> 明确指标 → EDA → 特征工程 → 基线模型 → 迭代（特征 &gt; 调参 &gt; 换模型）→ 交叉验证选型 → 错误分析 → 上线监控。</li>
+</ol>
+<hr />
+<h2 id="12">12. 公式速查卡</h2>
+<pre><code>线性回归：      ŷ = wᵀx + b,  L = (1/n)Σ(yᵢ−ŷᵢ)²,  闭式解 w = (XᵀX)⁻¹Xᵀy
+Sigmoid：       σ(z) = 1/(1+e⁻ᶻ)
+交叉熵：        L = −(1/n)Σ[yᵢ·log pᵢ + (1−yᵢ)·log(1−pᵢ)]
+熵：            H = −Σₖ pₖ·log₂pₖ      基尼：G = 1−Σₖpₖ²
+欧氏距离：      d = √Σⱼ(xⱼ−zⱼ)²
+SVM：           min ½||w||² + C·Σξᵢ,  s.t. yᵢ(wᵀxᵢ+b) ≥ 1−ξᵢ
+RBF 核：        K(x,z) = exp(−γ||x−z||²)
+贝叶斯：        P(y|x) ∝ P(y)·ΠⱼP(xⱼ|y)
+拉普拉斯平滑：  P = (计数+α)/(总数+α·|类别|)
+ReLU：          f(x) = max(0, x)
+Precision：     TP/(TP+FP)     Recall：TP/(TP+FN)     F1：2PR/(P+R)
+L2 正则：       +λΣw²          L1 正则：+λΣ|w|
+岭回归闭式解：  w = (XᵀX+λI)⁻¹Xᵀy
+</code></pre></div>
+</body></html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>监督学习：跟着答案学本领（小学生版） | 量子计算学习站</title>
+<style>
+:root{--ink:#0f172a;--body:#334155;--muted:#64748b;--line:#e2e8f0;--bg:#f8fafc;
+--brand:#1e3a8a;--accent:#0d9488;--card:#ffffff;--code-bg:#f1f5f9;}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+color:var(--body);background:var(--bg);line-height:1.75;font-size:16px}
+.topbar{position:sticky;top:0;z-index:9;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
+border-bottom:1px solid var(--line);padding:12px 24px;display:flex;gap:16px;align-items:center}
+.topbar a.home{font-weight:700;color:var(--brand);text-decoration:none}
+.topbar a.back{color:var(--accent);text-decoration:none;font-size:14px}
+.wrap{max-width:960px;margin:0 auto;padding:40px 24px 80px}
+h1{font-size:32px;color:var(--ink);border-bottom:3px solid var(--accent);padding-bottom:12px}
+h2{font-size:24px;color:var(--brand);margin-top:44px;border-left:5px solid var(--accent);padding-left:12px}
+h3{font-size:19px;color:var(--ink);margin-top:28px}
+blockquote{margin:16px 0;padding:12px 18px;background:#eff6ff;border-left:4px solid var(--brand);
+border-radius:0 8px 8px 0;color:#1e40af}
+table{border-collapse:collapse;width:100%;margin:18px 0;background:var(--card);font-size:14.5px}
+th{background:#1e3a8a;color:#fff;padding:9px 12px;text-align:left}
+td{border:1px solid var(--line);padding:8px 12px;vertical-align:top}
+tr:nth-child(even) td{background:#f8fafc}
+code{background:var(--code-bg);padding:2px 6px;border-radius:4px;font-size:.92em;
+font-family:Consolas,Menlo,monospace;color:#0f172a}
+pre{background:#0f172a;color:#e2e8f0;padding:18px;border-radius:10px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+hr{border:none;border-top:1px solid var(--line);margin:40px 0}
+details{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin:12px 0}
+summary{cursor:pointer;font-weight:600;color:var(--brand)}
+ul li,ol li{margin:4px 0}
+strong{color:var(--ink)}
+.dmath{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
+border-radius:8px;padding:14px 20px;margin:14px 0;font-family:Georgia,'Times New Roman',serif;
+font-size:17px;color:var(--ink);overflow-x:auto;white-space:pre-wrap}
+</style></head>
+<body>
+<nav class="topbar">
+  <a class="home" href="../index.html">⚛ 量子计算学习站</a>
+  <a class="back" href="../index.html">← 返回首页</a>
+</nav>
+<div class="wrap"><h1 id="_1">监督学习：让机器人跟着答案学本领的故事</h1>
+<h3 id="_2">——讲给小学生听的机器学习绘本 📖</h3>
+<hr />
+<h2 id="_3">一、什么是"监督学习"？先听个学骑车的故事 🚲</h2>
+<p>你学骑自行车的时候，爸爸在后面扶着，还会告诉你："身体歪了！往左一点！"——<strong>有人随时告诉你答案对不对</strong>，你才能越学越会。</p>
+<p><strong>监督学习</strong>就是这样：给机器人看<strong>一大堆带标准答案的题目</strong>，它做错了就告诉它，它慢慢就学会了。没人给答案的叫"无监督学习"（自己摸索），那是另一个故事啦。</p>
+<p>监督学习只干两种事：</p>
+<ul>
+<li><strong>分类题</strong>：回答"是哪一个？"——比如：这是猫的照片还是狗的照片？</li>
+<li><strong>回归题</strong>：回答"大约是多少？"——比如：这套房子能卖多少钱？</li>
+</ul>
+<hr />
+<h2 id="_4">二、八位"学习高手"一个一个登场 🎭</h2>
+<h3 id="1">🧙 1 号选手：线性回归——"拿尺子画一条最合适的线"</h3>
+<p>想象你记录了每天学钢琴的小时数和考试分数：</p>
+<pre><code>分数
+100 │        ●
+ 90 │     ●    ●
+ 80 │   ●   ●
+ 70 │  ●
+    └─────────────── 练琴小时
+</code></pre>
+<p>线性回归就是<strong>拿一根尺子在这些点中间画一条直线</strong>，让直线尽量"穿过"所有点的中间。以后你告诉我"练了 3 小时"，我就在线上一查："大概 75 分！"</p>
+<p><strong>什么时候用？</strong> 两个数量看起来"成正比"的时候：练琴时间→分数、房子面积→价格、身高→体重。</p>
+<hr />
+<h3 id="2">🕵️ 2 号选手：逻辑回归——"只会说'是/不是'的侦探"</h3>
+<p>线性回归回答"多少分"，但有些问题只有两种答案："这封邮件是不是垃圾邮件？"</p>
+<p>侦探的逻辑回归说："给我线索（有没有奇怪链接、是不是群发……），我给你一个<strong>嫌疑分数</strong>，从 0 到 100%。分数超过 50%，我就报警抓它！"</p>
+<p><strong>什么时候用？</strong> 一切"是/否"判断：是不是垃圾邮件、病人是不是感冒了、用户会不会点这个广告。银行判断"会不会赖账"也用它哦。</p>
+<hr />
+<h3 id="3-k-knn">🏘️ 3 号选手：K 近邻（KNN）——"看你的邻居就知道你是谁"</h3>
+<p>老话说："近朱者赤，近墨者黑。"KNN 就是这么想的：</p>
+<p>要判断一个新同学喜欢什么运动？先看看<strong>他家附近住的都是谁</strong>——周围 5 个邻居（K=5）里 3 个爱打篮球、2 个爱游泳，那就猜他也爱打篮球！</p>
+<p><strong>什么时候用？</strong> 分组推荐："和你相似的人都在买什么？推荐给你！"（这就是很多购物软件的推荐逻辑）</p>
+<p><strong>小提示</strong>：K 选太小（比如只看 1 个邻居），会被一个怪邻居带偏；K 太大，又变得没主见。就像问路问 5 个人比较稳，只问 1 个人容易走错。</p>
+<hr />
+<h3 id="4-20">🌳 4 号选手：决策树——"玩 20 个问题的问答机"</h3>
+<p>决策树像一个特别会提问的人，玩"猜动物"游戏：</p>
+<pre><code>它有尖耳朵吗？──是──→ 它会喵喵叫吗？──是──→ 猫！
+     │                     │
+     否                    否
+     ↓                     ↓
+它体型很大吗？──是──→ 大象！   └──→ 狗！
+</code></pre>
+<p>每个问题都像树的分叉，问几个问题就锁定答案。<strong>好处</strong>：它把自己的思路写得清清楚楚，谁都能看懂。<strong>坏处</strong>：太爱死记硬背（把练习册上的题全背下来，考试换个数字就不会了——大人们管这叫"过拟合"）。</p>
+<p><strong>什么时候用？</strong> 需要给别人解释"为什么这么判断"的时候，比如医生解释诊断流程。</p>
+<hr />
+<h3 id="5-svm">📏 5 号选手：支持向量机（SVM）——"修一条最宽的马路"</h3>
+<p>两队的地盘中间要划一条分界线，怎么划最公平？SVM 说："<strong>把马路修得越宽越好！</strong>"马路够宽，以后来了新同学，就算站得歪一点，也不容易站错队。</p>
+<pre><code>  猫猫队 ● ● ●
+              ═══════ ← 最宽的分界马路
+          × × × 狗狗队
+</code></pre>
+<p>要是马路上"猫狗混在一起划不开线"怎么办？SVM 会<strong>把纸变成一张会折叠的魔法地毯</strong>（这叫"核技巧"），一折叠，原本混在一起的小球就分开了！</p>
+<p><strong>什么时候用？</strong> 题目（数据）不算太多、但要求分得很清楚的时候。</p>
+<hr />
+<h3 id="6">🔍 6 号选手：朴素贝叶斯——"算概率的福尔摩斯"</h3>
+<p>福尔摩斯破案靠的是：<strong>"如果凶手是他，那么看到这些线索的可能性有多大？"</strong></p>
+<p>判断一封邮件是不是垃圾邮件：
+- 垃圾邮件里出现"中奖"的概率是 80%，正常邮件里只有 1%！
+- 所以看到"中奖"，这封邮件多半是垃圾邮件！</p>
+<p>它叫"朴素"，是因为它<strong>假设每条线索互不影响</strong>（其实"中奖"和"免费"常常一起出现，它装作不知道）。有点傻，但算得飞快，还是很好用。</p>
+<p><strong>什么时候用？</strong> 文字分类：过滤垃圾邮件、分辨新闻是体育版还是财经版。</p>
+<hr />
+<h3 id="7">🧠 7 号选手：神经网络——"传话游戏大军"</h3>
+<p>想象一个超长的传话队伍：</p>
+<pre><code>看到的图片 → 第一层小侦探（看有没有耳朵）→ 第二层小侦探（耳朵尖不尖）
+→ 第三层小侦探（有胡须吗）→ 队长宣布：&quot;是猫！&quot;
+</code></pre>
+<p>每个小侦探只负责一点点判断，但<strong>一层一层传下去</strong>，最后能认出超级复杂的东西——人脸、语音、手写字！这就是手机人脸解锁背后的本领。</p>
+<p><strong>特点</strong>：特别聪明但要吃很多"粮食"（要海量图片和超大电脑才能练出来）；而且是个黑盒子——认对了，但它自己也说不清为什么。</p>
+<p><strong>什么时候用？</strong> 识别照片、听懂说话、翻译外语这些"感觉类"的大难题。</p>
+<hr />
+<h3 id="8">🌲🌲🌲 8 号选手：集成学习家族——"组团打怪"</h3>
+<p>还记得吗？（在《集成学习-小学生版》里讲过）</p>
+<ul>
+<li><strong>随机森林</strong>：100 棵树同时答题、举手投票——人多不翻车。</li>
+<li><strong>GBDT / XGBoost / LightGBM</strong>：排队改错，一个补一个——接力变学霸。它们是处理"表格数据"（像成绩单那样一行行的数据）的世界冠军！</li>
+</ul>
+<p><strong>什么时候用？</strong> 只要有 Excel 表格式的数据要预测，先请它们出场，十有八九不会错。</p>
+<hr />
+<h2 id="_5">三、两件所有高手都要懂的"心法" 🧘</h2>
+<h3 id="vs">心法一：别做死记硬背的书呆子（过拟合 vs 欠拟合）</h3>
+<ul>
+<li><strong>死记硬背（过拟合）</strong>：把练习册答案全背下来了，模拟考 100 分，正式考换个数字就不会了。</li>
+<li><strong>没学会（欠拟合）</strong>：上课打瞌睡，模拟考正式考都不及格。</li>
+</ul>
+<p><strong>怎么避免死记硬背？</strong> 大人们用的招：多做不同的新题（更多数据）、考试前留几道题自己先检查（验证集）、别让大脑装太多没用的细节（正则化）。</p>
+<h3 id="_6">心法二：考完试要"阅卷"（模型评估）</h3>
+<p>机器人学完要考试打分，不同题型用不同的卷子：</p>
+<table>
+<thead>
+<tr>
+<th>题型</th>
+<th>看什么分</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>分类题</td>
+<td><strong>精确率</strong>：我喊"是猫"的那些里，真是猫的有多少？（别乱报！）<strong>召回率</strong>：所有的猫里，我抓出来了多少？（别漏掉！）</td>
+</tr>
+<tr>
+<td>回归题</td>
+<td>平均猜偏了多少分？</td>
+</tr>
+</tbody>
+</table>
+<p><strong>特别提醒</strong>：如果全班只有 2 个同学感冒（太少啦），一个只会喊"都没病"的笨机器人也能得 98 分——所以不能只看"总正确率"，要看精确率和召回率！</p>
+<hr />
+<h2 id="_7">四、八位高手大合影（一图记住）</h2>
+<table>
+<thead>
+<tr>
+<th>选手</th>
+<th>外号</th>
+<th>擅长</th>
+<th>像什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>线性回归</td>
+<td>画线小能手</td>
+<td>数量对数量（回归）</td>
+<td>拿尺子画线</td>
+</tr>
+<tr>
+<td>逻辑回归</td>
+<td>是非侦探</td>
+<td>是/否判断（分类）</td>
+<td>给嫌疑打分</td>
+</tr>
+<tr>
+<td>K 近邻</td>
+<td>邻居控</td>
+<td>推荐相似的人</td>
+<td>近朱者赤</td>
+</tr>
+<tr>
+<td>决策树</td>
+<td>问答机</td>
+<td>需要解释的判断</td>
+<td>玩 20 个问题</td>
+</tr>
+<tr>
+<td>SVM</td>
+<td>修路工程师</td>
+<td>分得清清楚楚</td>
+<td>修最宽的马路</td>
+</tr>
+<tr>
+<td>朴素贝叶斯</td>
+<td>概率福尔摩斯</td>
+<td>文字分类</td>
+<td>算线索概率</td>
+</tr>
+<tr>
+<td>神经网络</td>
+<td>传话大军</td>
+<td>照片/语音/文字</td>
+<td>接力传话</td>
+</tr>
+<tr>
+<td>集成家族</td>
+<td>组团战队</td>
+<td>表格数据之王</td>
+<td>投票 + 接力改错</td>
+</tr>
+</tbody>
+</table>
+<p><strong>选人口诀</strong>：</p>
+<blockquote>
+<p>算数画线找线性，是非判断找逻辑；
+找相似问邻居，讲道理画树图；
+修马路是 SVM，读文字找贝叶斯；
+表格找集成，图片语音找神经！</p>
+</blockquote>
+<hr />
+<h2 id="_8">五、考考你（小测验）✏️</h2>
+<ol>
+<li>想根据房子面积猜房价，该请哪位高手？</li>
+<li>判断"这封邮件是不是垃圾邮件"，用哪两位？（提示：一个打分，一个算概率）</li>
+<li>"周围 5 个邻居有 3 个爱打篮球，就猜你也爱打篮球"是哪位高手？</li>
+<li>模拟考 100 分、正式考不及格，这叫什么？</li>
+<li>全班只有 2 个人感冒，只会喊"都没病"的机器人为什么不算好？</li>
+</ol>
+<details>
+<summary>👇 点开看答案</summary>
+
+1. 线性回归（画一条线来猜数）。
+2. 逻辑回归（嫌疑分数）和朴素贝叶斯（算线索概率）。
+3. K 近邻（KNN）。
+4. 过拟合（死记硬背书呆子病）。
+5. 因为它把感冒的 2 个人全漏掉了——要看召回率，不能只看总正确率。
+</details>
+
+<hr />
+<p><em>想看正式的公式和推导？去读《监督学习算法-面试版.md》；集成学习的详细故事在《集成学习-小学生版.md》。</em></p></div>
+</body></html>
