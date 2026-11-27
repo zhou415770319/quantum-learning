@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>在线量子电路模拟器 | 量子计算学习站</title>
+<style>
+:root{--ink:#0f172a;--body:#334155;--muted:#64748b;--line:#e2e8f0;--bg:#f8fafc;
+--card:#fff;--brand:#1e3a8a;--brand2:#2563eb;--accent:#0d9488;--amber:#d97706;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+color:var(--body);background:var(--bg);line-height:1.65;font-size:15px}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);
+backdrop-filter:blur(10px);border-bottom:1px solid var(--line);height:56px;
+display:flex;align-items:center;gap:18px;padding:0 32px}
+.topbar a{color:var(--brand);text-decoration:none;font-weight:700}
+.topbar .back{color:var(--accent);font-weight:500;font-size:14px;margin-left:auto}
+.hero{background:linear-gradient(130deg,#0f172a 0%,#1e3a8a 55%,#0d9488 125%);
+color:#fff;padding:56px 32px 62px;position:relative;overflow:hidden}
+.hero>*{position:relative;max-width:1100px;margin:0 auto}
+.hero .badge{display:inline-block;font-size:12.5px;letter-spacing:2px;color:#99f6e4;
+border:1px solid rgba(153,246,228,.4);border-radius:999px;padding:3px 14px;margin-bottom:14px}
+.hero h1{font-size:32px;margin:0 0 10px}
+.hero p{color:#cbd5e1;margin:0;max-width:800px}
+.hero .meta{margin-top:16px;font-size:13px;color:#93c5fd;display:flex;gap:18px;flex-wrap:wrap}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+section{padding:48px 0 8px}
+.sec-head{margin-bottom:22px}
+.sec-head .no{font-size:12.5px;font-weight:700;letter-spacing:3px;color:var(--accent)}
+.sec-head h2{font-size:25px;color:var(--ink);margin:6px 0}
+.sec-head p{color:var(--muted);margin:0;font-size:14px}
+
+.sim-layout{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;
+box-shadow:0 1px 3px rgba(15,23,42,.05)}
+.panel h3{font-size:15px;color:var(--ink);margin:0 0 10px}
+.panel h3:not(:first-child){margin-top:20px}
+.hint{font-size:12.5px;color:var(--muted);margin:9px 0 10px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:#f8fafc;border-radius:8px;padding:5px 12px;
+font-size:13px;color:var(--body);cursor:pointer}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.palette{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
+.gate-btn{border:1px solid #cbd5e1;background:#fff;border-radius:8px;padding:8px 2px;
+font-size:14px;font-weight:700;color:var(--brand);cursor:pointer;text-align:center}
+.gate-btn small{display:block;font-size:10.5px;font-weight:400;color:var(--muted);margin-top:1px}
+.gate-btn:hover{border-color:var(--accent);background:#f0fdfa}
+.gate-btn.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.gate-btn.on small{color:#bfdbfe}
+.gate-btn.two{background:#fffbeb;border-color:#fcd34d;color:#92400e}
+.gate-btn.two.on{background:var(--amber);color:#fff;border-color:var(--amber)}
+.gate-btn.two.on small{color:#fef3c7}
+.gate-btn.erase{background:#fef2f2;border-color:#fecaca;color:#b91c1c}
+.gate-btn.erase.on{background:#b91c1c;color:#fff}
+.circuit-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:#fcfdff;padding:6px}
+#circuit{display:block;min-width:100%}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btn{border:0;border-radius:8px;padding:8px 16px;font-size:13.5px;font-weight:600;cursor:pointer}
+.btn-run{background:var(--brand);color:#fff}
+.btn-measure{background:var(--accent);color:#fff}
+.btn-clear{background:#f1f5f9;color:var(--body);border:1px solid var(--line)}
+.status{font-size:12.5px;color:var(--accent);margin-top:10px;min-height:20px}
+
+.state-list{max-height:210px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+.state-row{display:grid;grid-template-columns:74px 1fr 62px;gap:8px;padding:6px 10px;
+font-size:12.5px;border-bottom:1px solid #f1f5f9;align-items:center}
+.state-row:last-child{border-bottom:0}
+.state-row .ket{font-family:Consolas,monospace;color:var(--brand);font-weight:700}
+.state-row .amp{font-family:Consolas,monospace;color:var(--body)}
+.state-row .pr{text-align:right;color:var(--accent);font-weight:700}
+.state-row.zero{opacity:.5}
+.bars{display:flex;align-items:flex-end;gap:6px;height:170px;padding:8px 6px 0;
+border:1px solid var(--line);border-radius:8px;background:#fff}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.bar{width:100%;max-width:46px;background:var(--brand2);border-radius:4px 4px 0 0;min-height:2px;transition:height .25s}
+.bar.hi{background:var(--accent)}
+.bar-lb{font-family:Consolas,monospace;font-size:11px;color:var(--muted);margin-top:5px}
+.bar-val{font-family:Consolas,monospace;font-size:11px;color:var(--body);margin-bottom:3px}
+.bloch-box{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+#bloch{width:210px;height:210px;flex:none}
+.bloch-val{font-size:12.5px;line-height:1.9;font-family:Consolas,monospace}
+.bloch-val b{color:var(--brand);font-family:inherit}
+.shots{font-size:13px;line-height:1.9}
+.shots .srow{display:flex;gap:10px;align-items:center}
+.shots .sbar{height:9px;background:var(--accent);border-radius:5px}
+.shots code{font-family:Consolas,monospace;color:var(--brand)}
+.examples{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.ex{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;cursor:pointer}
+.ex:hover{border-color:var(--accent);box-shadow:0 2px 8px rgba(13,148,136,.12)}
+.ex b{color:var(--ink);font-size:14px;display:block;margin-bottom:4px}
+.ex span{font-size:12.5px;color:var(--muted)}
+.tbl-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{background:var(--brand);color:#fff;padding:10px 12px;text-align:left;white-space:nowrap}
+td{border:1px solid var(--line);padding:9px 12px;vertical-align:top}
+tr:nth-child(even) td{background:#f8fafc}
+td:first-child{font-weight:600;color:var(--ink);white-space:nowrap}
+a{color:var(--brand2)}
+.note{margin-top:24px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;
+padding:16px 20px;font-size:13.2px;color:#92400e}
+.note ul{margin:8px 0 0;padding-left:20px}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.step{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;position:relative}
+.step::before{counter-increment:s;content:counter(s);position:absolute;right:14px;top:10px;
+font-size:26px;font-weight:800;color:#e2e8f0}
+.step b{color:var(--ink);display:block;margin-bottom:5px}
+.step p{margin:0;font-size:13px}
+footer{margin-top:60px;background:#0f172a;color:#94a3b8;text-align:center;padding:30px;font-size:13px}
+footer a{color:#5eead4}
+@media(max-width:900px){.sim-layout,.examples,.steps{grid-template-columns:1fr}.palette{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a href="../index.html">⚛ 量子计算学习站</a>
+  <span style="color:#64748b;font-weight:500">/ 在线量子电路模拟器</span>
+  <a class="back" href="../index.html">← 返回首页</a>
+</header>
+
+<div class="hero">
+  <div class="badge">BROWSER SIMULATOR · 纯前端</div>
+  <h1>在线量子电路模拟器</h1>
+  <p>不装 Python、不连服务器，直接在浏览器里搭电路、看振幅、看概率、做测量。这就是"页面模拟效果"的最小可行形态——也是量子云平台最核心的那一块。</p>
+  <div class="meta">
+    <span>状态矢量模拟：最多 4 比特</span>
+    <span>全部计算在本地 JS 完成</span>
+    <span>可导出 OpenQASM 3</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<section id="sim">
+<div class="sec-head">
+  <div class="no">01 / 动手玩</div>
+  <h2>拖不动也没关系，点两下就能搭电路</h2>
+  <p>先选门，再点电路格子放置；双比特门（CNOT / CZ / SWAP）要点两次：第一次点控制位，第二次点目标位。</p>
+</div>
+
+<div class="sim-layout">
+  <!-- 左侧：编辑区 -->
+  <div class="panel">
+    <h3>① 量子比特数</h3>
+    <div class="row" id="nqRow"></div>
+    <div class="hint">比特越多，状态空间越大（2ⁿ 个振幅），这里限制 4 比特保证浏览器流畅。</div>
+
+    <h3>② 选一个门</h3>
+    <div class="palette" id="palette"></div>
+    <div class="hint">单比特门点一次放置；CNOT / CZ / SWAP 点两次指定控制位与目标位；橡皮擦点一次删除。</div>
+
+    <h3>③ 电路（点格子放门）</h3>
+    <div class="circuit-wrap"><svg id="circuit" width="640" height="250" viewBox="0 0 640 250"></svg></div>
+
+    <div class="controls">
+      <button class="btn btn-run" id="runBtn">运行模拟</button>
+      <button class="btn btn-measure" id="measureBtn">测量 1024 次</button>
+      <button class="btn btn-clear" id="clearBtn">清空电路</button>
+      <button class="btn btn-clear" id="qasmBtn">导出 QASM</button>
+    </div>
+    <div class="status" id="status">提示：电路改动后会自动重新计算。</div>
+  </div>
+
+  <!-- 右侧：结果区 -->
+  <div class="panel">
+    <h3>态矢量 |ψ⟩ = Σ αᵢ |i⟩</h3>
+    <div class="state-list" id="stateList"></div>
+    <div class="hint" style="margin-top:8px">概率 = |实部|² + |虚部|²；所有行概率之和恒为 1。</div>
+
+    <h3>测量概率分布</h3>
+    <div class="bars" id="bars"></div>
+
+    <h3>Bloch 球（第 0 个量子比特的约化态）</h3>
+    <div class="bloch-box">
+      <svg id="bloch" viewBox="0 0 210 210"></svg>
+      <div class="bloch-val" id="blochVal"></div>
+    </div>
+
+    <h3>采样结果（shots）</h3>
+    <div class="shots" id="shots">点击"测量 1024 次"查看直方图。</div>
+  </div>
+</div>
+</section>
+
+<section>
+<div class="sec-head">
+  <div class="no">02 / 一键示例</div>
+  <h2>四个经典电路，点一下就装好</h2>
+  <p>建议按顺序试：先看叠加，再看相位翻转被 H 变成 100% 结果的干涉，最后看纠缠与振幅放大。</p>
+</div>
+<div class="examples" id="examples"></div>
+</section>
+
+<section>
+<div class="sec-head">
+  <div class="no">03 / 技术选型</div>
+  <h2>开源项目盘点：哪些能直接拿来用</h2>
+  <p>按"你能承担多少后端工作量"来选，而不是按名气选。</p>
+</div>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>项目</th><th>形态</th><th>能力边界</th><th>许可</th><th>适合你吗</th></tr></thead>
+<tbody>
+<tr><td>Quirk</td><td>纯前端单页</td><td>拖拽编辑、实时更新、内联状态显示、最多 16 比特；2018 年后基本停更但在线版仍可用</td><td>Apache-2.0</td><td>体验参考，代码偏老，不建议直接二次开发</td></tr>
+<tr><td>quantum-circuit</td><td>JS 库（CDN / npm）</td><td>浏览器与 Node 都能跑，20+ 比特；OpenQASM / Quil 导入，导出 8 种语言，SVG 电路图</td><td>MIT</td><td>✅ 前端接入最快，一个 script 标签就能用</td></tr>
+<tr><td>QuantumJS</td><td>JS/TS DSL + Bench</td><td>用 JS 写电路、编译 OpenQASM 3、浏览器态矢模拟 + SVG 电路绘制，在线 Bench 可直接体验</td><td>Apache-2.0</td><td>✅ 想做"代码式"编辑器首选</td></tr>
+<tr><td>Quantiom</td><td>纯前端工作站</td><td>态矢 20 比特 / Clifford 表 1024 比特 / 噪声轨迹；113 个分析面板；OpenQASM 3 双向；无需后端</td><td>MIT</td><td>功能天花板最高，适合做专业版</td></tr>
+<tr><td>quantum-viz.js</td><td>电路绘图库</td><td>微软出品，只负责把电路画成 SVG/HTML，不负责计算；支持测量分支交互</td><td>MIT</td><td>✅ 自研模拟器时专门用来画电路</td></tr>
+<tr><td>Qiskit Aer</td><td>Python 后端</td><td>工业级模拟器，噪声模型、30+ 比特；需服务端部署</td><td>Apache-2.0</td><td>做真云平台时的服务端主力</td></tr>
+<tr><td>Stim + PyMatching</td><td>Python 内核</td><td>稳定子模拟可达上千比特，专攻量子纠错线路</td><td>Apache-2.0</td><td>做 QEC 方向才需要</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section>
+<div class="sec-head">
+  <div class="no">04 / 落地路线</div>
+  <h2>从页面模拟到量子云平台，分三步走</h2>
+  <p>不要一上来就接真机。先把"浏览器算得动"做扎实，后端与真机是后面的事。</p>
+</div>
+<div class="steps">
+  <div class="step"><b>阶段一：纯前端（静态站即可）</b><p>用本页这种 JS 态矢内核，或引入 quantum-circuit / QuantumJS。电路编辑、振幅、概率、Bloch 球、shots 全在浏览器完成。GitHub Pages 免费托管，零运维。</p></div>
+  <div class="step"><b>阶段二：加服务层</b><p>Python 服务接 Qiskit Aer，提供 /submit、/result、/backends 三个接口；加用户、限流、任务队列与结果缓存。前端把"重计算"交给后端，比特数上到 30+。</p></div>
+  <div class="step"><b>阶段三：接真机与多后端</b><p>按平台 API 接入本源 QPanda、天衍、IBM Quantum 等；统一电路 IR（OpenQASM 3）与后端抽象层，处理校准数据、拓扑映射、排队与噪声对比。</p></div>
+</div>
+<div class="note">
+  <b>关键判断：你的学习站停在阶段一就够了。</b>
+  <ul>
+    <li>教学演示 3~5 比特足够，浏览器算得飞快，还不需要账号体系；</li>
+    <li>真机接入涉及 API Key、排队、校准数据，且国内平台多数要申请权限，不适合放在公开学习站；</li>
+    <li>如果以后要做成产品，"前端编辑器 + 统一 QASM IR + 可插拔后端"这套结构可以直接复用，不用重写。</li>
+  </ul>
+</div>
+</section>
+
+</div>
+
+<footer>量子计算学习站 · 在线模拟器 · 所有计算均在浏览器本地完成，不上传任何数据<br><a href="https://github.com/zhou415770319/quantum-learning">GitHub 仓库</a></footer>
+
+<script>
+const C = (re, im) => ({re, im: im || 0});
+const add = (a,b) => C(a.re+b.re, a.im+b.im);
+const mul = (a,b) => C(a.re*b.re - a.im*b.im, a.re*b.im + a.im*b.re);
+const scale = (a,s) => C(a.re*s, a.im*s);
+const SQ = 1/Math.SQRT2;
+const GATES = {
+  I: {name:'I', tip:'恒等', m:[[C(1),C(0)],[C(0),C(1)]]},
+  X: {name:'X', tip:'翻转', m:[[C(0),C(1)],[C(1),C(0)]]},
+  Y: {name:'Y', tip:'绕Y', m:[[C(0),C(0,-1)],[C(0,1),C(0)]]},
+  Z: {name:'Z', tip:'翻相位', m:[[C(1),C(0)],[C(0),C(-1)]]},
+  H: {name:'H', tip:'叠加', m:[[C(SQ),C(SQ)],[C(SQ),C(-SQ)]]},
+  S: {name:'S', tip:'90°', m:[[C(1),C(0)],[C(0),C(0,1)]]},
+  T: {name:'T', tip:'45°', m:[[C(1),C(0)],[C(0),C(Math.cos(Math.PI/4),Math.sin(Math.PI/4))]]},
+  SDG: {name:'S†', tip:'-90°', m:[[C(1),C(0)],[C(0),C(0,-1)]]},
+  TDG: {name:'T†', tip:'-45°', m:[[C(1),C(0)],[C(0),C(Math.cos(Math.PI/4),-Math.sin(Math.PI/4))]]}
+};
+const TWO = ['CX','CZ','SWAP'];
+const MAXCOL = 10;
+let nq = 2, selected = 'H', pending = null, grid = [], state = [], shotData = null;
+
+function initGrid(){grid = Array.from({length:MAXCOL}, () => ({s:{}, two:null}));}
+function fmt(z){
+  const r = Math.abs(z.re) < 1e-9 ? 0 : z.re;
+  const i = Math.abs(z.im) < 1e-9 ? 0 : z.im;
+  return r.toFixed(3) + (i >= 0 ? ' + ' : ' - ') + Math.abs(i).toFixed(3) + 'i';
+}
+function ket(i){return '|' + i.toString(2).padStart(nq,'0') + '⟩';}
+function prob(i){return state[i].re*state[i].re + state[i].im*state[i].im;}
+
+function apply1(q, m){
+  const bit = 1 << q;
+  for (let i=0;i<state.length;i++){
+    if ((i & bit) === 0){
+      const j = i | bit, a = state[i], b = state[j];
+      state[i] = add(mul(m[0][0],a), mul(m[0][1],b));
+      state[j] = add(mul(m[1][0],a), mul(m[1][1],b));
+    }
+  }
+}
+function applyTwo(g, c, t){
+  const cm = 1 << c, tm = 1 << t;
+  if (g === 'CZ'){
+    for (let i=0;i<state.length;i++) if ((i & cm) && (i & tm)) state[i] = scale(state[i], -1);
+    return;
+  }
+  for (let i=0;i<state.length;i++){
+    if ((i & cm) && !(i & tm)){
+      const j = i | tm, tmp = state[i]; state[i] = state[j]; state[j] = tmp;
+    }
+  }
+}
+function compute(){
+  state = Array.from({length: 1<<nq}, (_,i) => C(i===0?1:0));
+  for (let c=0;c<MAXCOL;c++){
+    const cell = grid[c];
+    if (cell.two) applyTwo(cell.two.g, cell.two.ctrl, cell.two.target);
+    Object.keys(cell.s).forEach(w => apply1(Number(w), GATES[cell.s[w]].m));
+  }
+}
+
+function buildPalette(){
+  const box = document.getElementById('palette');
+  const list = [];
+  Object.keys(GATES).forEach(k => list.push([k, GATES[k].name, GATES[k].tip, '']));
+  TWO.forEach(k => list.push([k, k==='CX'?'CNOT':k, k==='CX'?'受控非':(k==='CZ'?'受控Z':'交换'), 'two']));
+  list.push(['ERASE','✕','橡皮擦','erase']);
+  box.innerHTML = list.map(([k,n,t,cls]) =>
+    '<button class="gate-btn '+cls+(selected===k?' on':'')+'" data-g="'+k+'">'+n+'<small>'+t+'</small></button>').join('');
+  box.querySelectorAll('button').forEach(b => b.onclick = () => {
+    selected = b.dataset.g; pending = null; buildPalette(); renderCircuit();
+  });
+}
+function buildNQ(){
+  document.getElementById('nqRow').innerHTML = [1,2,3,4].map(n =>
+    '<button class="chip '+(nq===n?'on':'')+'" data-n="'+n+'">'+n+' 比特</button>').join('');
+  document.querySelectorAll('#nqRow .chip').forEach(b => b.onclick = () => {
+    const old = nq; nq = Number(b.dataset.n);
+    if (nq < old){
+      for (let c=0;c<MAXCOL;c++){
+        Object.keys(grid[c].s).forEach(w => {if (Number(w) >= nq) delete grid[c].s[w];});
+        if (grid[c].two && (grid[c].two.ctrl >= nq || grid[c].two.target >= nq) && nq < 2) grid[c].two = null;
+        else if (grid[c].two && grid[c].two.ctrl === grid[c].two.target) grid[c].two = null;
+        if (grid[c].two && grid[c].two.ctrl >= nq) grid[c].two = null;
+        if (grid[c].two && grid[c].two.target >= nq) grid[c].two = null;
+      }
+    }
+    shotData = null; buildNQ(); renderAll();
+  });
+}
+
+const CW = 58, X0 = 46, Y0 = 44, RH = 46;
+function renderCircuit(){
+  const svg = document.getElementById('circuit');
+  const W = X0 + MAXCOL*CW + 24, H = Y0 + (nq-1)*RH + 56;
+  svg.setAttribute('width', W); svg.setAttribute('height', H);
+  svg.setAttribute('viewBox', '0 0 '+W+' '+H);
+  let s = '';
+  for (let w=0; w<nq; w++){
+    const y = Y0 + w*RH;
+    s += '<line x1="20" y1="'+y+'" x2="'+(X0+(MAXCOL-1)*CW+22)+'" y2="'+y+'" stroke="#cbd5e1" stroke-width="1.4"/>';
+    s += '<text x="8" y="'+(y+4)+'" font-size="12" fill="#64748b">q'+w+'</text>';
+  }
+  for (let c=0;c<MAXCOL;c++){
+    const cell = grid[c], x = X0 + c*CW;
+    if (cell.two){
+      const yc = Y0 + cell.two.ctrl*RH, yt = Y0 + cell.two.target*RH;
+      const col = cell.two.g === 'CZ' ? '#d97706' : '#0d9488';
+      s += '<line x1="'+x+'" y1="'+yc+'" x2="'+x+'" y2="'+yt+'" stroke="'+col+'" stroke-width="2"/>';
+      s += '<circle cx="'+x+'" cy="'+yc+'" r="5.5" fill="'+col+'"/>';
+      if (cell.two.g === 'CX'){
+        s += '<circle cx="'+x+'" cy="'+yt+'" r="12" fill="#fff" stroke="'+col+'" stroke-width="2"/>';
+        s += '<line x1="'+(x-8)+'" y1="'+yt+'" x2="'+(x+8)+'" y2="'+yt+'" stroke="'+col+'" stroke-width="2"/>';
+        s += '<line x1="'+x+'" y1="'+(yt-8)+'" x2="'+x+'" y2="'+(yt+8)+'" stroke="'+col+'" stroke-width="2"/>';
+      } else if (cell.two.g === 'CZ'){
+        s += '<circle cx="'+x+'" cy="'+yt+'" r="6" fill="'+col+'"/>';
+      } else {
+        s += '<path d="M'+(x-9)+' '+(yt-9)+'L'+(x+9)+' '+(yt+9)+'M'+(x+9)+' '+(yt-9)+'L'+(x-9)+' '+(yt+9)+'" stroke="'+col+'" stroke-width="2.5"/>';
+      }
+    }
+    Object.keys(cell.s).forEach(w => {
+      const y = Y0 + Number(w)*RH;
+      s += '<rect x="'+(x-16)+'" y="'+(y-16)+'" width="32" height="32" rx="6" fill="#1e3a8a"/>';
+      s += '<text x="'+x+'" y="'+(y+5)+'" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">'+cell.s[w]+'</text>';
+    });
+  }
+  for (let c=0;c<MAXCOL;c++) for (let w=0;w<nq;w++){
+    const x = X0 + c*CW, y = Y0 + w*RH;
+    const highlight = pending && pending.col===c && pending.wire===w;
+    s += '<rect class="cell" data-c="'+c+'" data-w="'+w+'" x="'+(x-CW/2)+'" y="'+(y-RH/2)+'" width="'+CW+'" height="'+RH+'" fill="'+(highlight?'#fde68a':'transparent')+'" stroke="'+(highlight?'#d97706':'transparent')+'" stroke-width="1.5" style="cursor:pointer"/>';
+  }
+  s += '<text x="20" y="'+(H-12)+'" font-size="11.5" fill="#94a3b8">点击格子放门 · 双比特门先点控制位再点目标位</text>';
+  svg.innerHTML = s;
+  svg.querySelectorAll('.cell').forEach(el => el.onclick = () => onCell(Number(el.dataset.c), Number(el.dataset.w)));
+}
+function onCell(c, w){
+  if (selected === 'ERASE'){
+    grid[c].s[w] = undefined; delete grid[c].s[w];
+    if (grid[c].two && (grid[c].two.ctrl===w || grid[c].two.target===w)) grid[c].two = null;
+    pending = null; renderAll(); return;
+  }
+  if (TWO.includes(selected)){
+    if (nq < 2){setStatus('双比特门至少需要 2 个量子比特。'); return;}
+    if (!pending){ pending = {col:c, wire:w}; setStatus('已选控制位 q'+w+'，请点击同一列的另一个量子比特作为目标位。'); renderCircuit(); return; }
+    if (pending.col !== c){ pending = {col:c, wire:w}; setStatus('控制位和目标位必须在同一列，已重新选择控制位 q'+w+'。'); renderCircuit(); return; }
+    if (pending.wire === w){ pending = null; setStatus('已取消选择。'); renderCircuit(); return; }
+    grid[c].two = {g:selected, ctrl:pending.wire, target:w};
+    pending = null; setStatus('已放置 '+selected+'：控制位 q'+grid[c].two.ctrl+' → 目标位 q'+w+'。');
+  } else {
+    if (grid[c].s[w] === selected) delete grid[c].s[w];
+    else { grid[c].s[w] = selected; if (grid[c].two && (grid[c].two.ctrl===w || grid[c].two.target===w)) grid[c].two = null; }
+    setStatus('已放置 '+selected+' 于 q'+w+'。');
+  }
+  shotData = null; renderAll();
+}
+
+function renderState(){
+  const rows = state.map((z,i) => {
+    const p = prob(i);
+    return '<div class="state-row'+(p<1e-9?' zero':'')+'"><span class="ket">'+ket(i)+'</span>'+
+      '<span class="amp">'+fmt(z)+'</span><span class="pr">'+(p*100).toFixed(1)+'%</span></div>';
+  });
+  document.getElementById('stateList').innerHTML = rows.join('');
+  const max = Math.max(...state.map((_,i)=>prob(i)), 0.0001);
+  document.getElementById('bars').innerHTML = state.map((_,i) => {
+    const p = prob(i), h = Math.max(2, p/max*132);
+    return '<div class="bar-col"><span class="bar-val">'+(p*100).toFixed(0)+'</span>'+
+      '<div class="bar'+(p>max*0.99?' hi':'')+'" style="height:'+h+'px"></div>'+
+      '<span class="bar-lb">'+i.toString(2).padStart(nq,'0')+'</span></div>';
+  }).join('');
+}
+function bloch(){
+  let z = 0, coh = C(0);
+  const bit = 1;
+  for (let i=0;i<state.length;i++){
+    if ((i & bit) === 0){
+      const j = i | bit;
+      z += prob(i) - prob(j);
+      coh = add(coh, mul(state[i], C(state[j].re, -state[j].im)));
+    }
+  }
+  const x = 2*coh.re, y = -2*coh.im;
+  const cx=105, cy=105, R=76;
+  const px = cx + x*R, py = cy - z*R;
+  let s = '<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="#fff" stroke="#cbd5e1" stroke-width="1.2"/>';
+  s += '<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+R+'" ry="25" fill="none" stroke="#e2e8f0" stroke-width="1"/>';
+  s += '<ellipse cx="'+cx+'" cy="'+cy+'" rx="25" ry="'+R+'" fill="none" stroke="#e2e8f0" stroke-width="1"/>';
+  s += '<line x1="'+(cx-R)+'" y1="'+cy+'" x2="'+(cx+R)+'" y2="'+cy+'" stroke="#94a3b8" stroke-width="1"/>';
+  s += '<line x1="'+cx+'" y1="'+(cy-R)+'" x2="'+cx+'" y2="'+(cy+R)+'" stroke="#94a3b8" stroke-width="1"/>';
+  s += '<text x="'+(cx+R+4)+'" y="'+(cy+4)+'" font-size="11" fill="#64748b">x</text>';
+  s += '<text x="'+(cx+5)+'" y="'+(cy-R-5)+'" font-size="11" fill="#64748b">z</text>';
+  s += '<text x="'+(cx-16)+'" y="'+(cy+R+14)+'" font-size="11" fill="#64748b">y（垂直纸面）</text>';
+  const ang = Math.atan2(cy-py, px-cx), len = Math.hypot(px-cx, py-cy);
+  const hx = px - 9*Math.cos(ang-0.45), hy = py + 9*Math.sin(ang-0.45);
+  const hx2 = px - 9*Math.cos(ang+0.45), hy2 = py + 9*Math.sin(ang+0.45);
+  if (len > 3){
+    s += '<line x1="'+cx+'" y1="'+cy+'" x2="'+px+'" y2="'+py+'" stroke="#0d9488" stroke-width="2.5"/>';
+    s += '<path d="M'+px+' '+py+'L'+hx+' '+hy+'L'+hx2+' '+hy2+'Z" fill="#0d9488"/>';
+  }
+  s += '<circle cx="'+cx+'" cy="'+cy+'" r="2.5" fill="#1e3a8a"/>';
+  document.getElementById('bloch').innerHTML = s;
+  document.getElementById('blochVal').innerHTML =
+    '<b>⟨X⟩ = '+x.toFixed(3)+'</b><br><b>⟨Y⟩ = '+y.toFixed(3)+'</b><br><b>⟨Z⟩ = '+z.toFixed(3)+'</b><br>'+
+    '<span style="color:#64748b">纯度 = '+Math.sqrt(Math.max(0,x*x+y*y+z*z)).toFixed(3)+'（1 为纯态）</span>';
+}
+function doMeasure(){
+  const n = 1024, counts = Array(state.length).fill(0);
+  const cum = []; let acc = 0;
+  for (let i=0;i<state.length;i++){acc += prob(i); cum.push(acc);}
+  for (let k=0;k<n;k++){
+    const r = Math.random()*acc;
+    let hit = cum.findIndex(v => r <= v); if (hit<0) hit = state.length-1;
+    counts[hit]++;
+  }
+  shotData = counts;
+  const max = Math.max(...counts);
+  document.getElementById('shots').innerHTML = counts.map((v,i) =>
+    '<div class="srow"><code>'+ket(i)+'</code><div class="sbar" style="width:'+(v/max*220)+'px"></div><span>'+v+' 次 · '+(v/n*100).toFixed(1)+'%</span></div>').join('');
+  setStatus('测量完成：共 '+n+' 次。直方图逼近上面的理论概率，这就是"抽样误差"。');
+}
+function exportQASM(){
+  let q = 'OPENQASM 3.0;\ninclude "stdgates.inc";\nqubit['+nq+'] q;\n';
+  for (let c=0;c<MAXCOL;c++){
+    const cell = grid[c];
+    if (cell.two){
+      if (cell.two.g==='CX') q += 'cx q['+cell.two.ctrl+'], q['+cell.two.target+'];\n';
+      if (cell.two.g==='CZ') q += 'cz q['+cell.two.ctrl+'], q['+cell.two.target+'];\n';
+      if (cell.two.g==='SWAP') q += 'swap q['+cell.two.ctrl+'], q['+cell.two.target+'];\n';
+    }
+    Object.keys(cell.s).forEach(w => {
+      const g = cell.s[w].toLowerCase().replace('dg','dg');
+      q += g + ' q[' + w + '];\n';
+    });
+  }
+  const blob = new Blob([q], {type:'text/plain'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'circuit.qasm'; a.click(); URL.revokeObjectURL(a.href);
+  setStatus('已导出 circuit.qasm（OpenQASM 3.0），可直接喂给 Qiskit。');
+}
+function setStatus(t){document.getElementById('status').textContent = t;}
+function renderAll(){compute(); renderCircuit(); renderState(); bloch();
+  if (shotData) document.getElementById('shots').innerHTML = '电路已改动，请重新测量。';
+}
+
+const EXAMPLES = [
+  {n:1, name:'叠加：H', desc:'一个比特变成 50/50', ops:[[0,0,'H']]},
+  {n:1, name:'干涉：H-Z-H', desc:'相位翻转被 H 变成 100% 的 |1⟩', ops:[[0,0,'H'],[1,0,'Z'],[2,0,'H']]},
+  {n:2, name:'Bell 纠缠态', desc:'H + CNOT → (|00⟩+|11⟩)/√2', ops:[[0,0,'H'],[1,'CX',0,1]]},
+  {n:2, name:'Grover 一次迭代', desc:'H⊗H→CZ→H⊗H→Z⊗Z→CZ→H⊗H → 100% 命中 |11⟩', ops:[[0,0,'H'],[0,1,'H'],[1,'CZ',0,1],[2,0,'H'],[2,1,'H'],[3,0,'Z'],[3,1,'Z'],[4,'CZ',0,1],[5,0,'H'],[5,1,'H']]}
+];
+function buildExamples(){
+  document.getElementById('examples').innerHTML = EXAMPLES.map((e,i) =>
+    '<div class="ex" data-i="'+i+'"><b>'+e.name+'</b><span>'+e.desc+'</span></div>').join('');
+  document.querySelectorAll('.ex').forEach(el => el.onclick = () => {
+    const e = EXAMPLES[Number(el.dataset.i)];
+    nq = e.n; initGrid();
+    e.ops.forEach(op => { if (op[1] === 'CX' || op[1] === 'CZ' || op[1] === 'SWAP') grid[op[0]].two = {g:op[1], ctrl:op[2], target:op[3]}; else grid[op[0]].s[op[1]] = op[2]; });
+    pending = null; shotData = null; buildNQ(); buildPalette(); renderAll();
+    setStatus('已载入示例：'+e.name+'。');
+  });
+}
+
+initGrid(); buildNQ(); buildPalette(); buildExamples(); renderAll();
+document.getElementById('runBtn').onclick = () => {compute(); renderState(); bloch(); setStatus('已重新运行：'+ (1<<nq) +' 个振幅全部更新。');};
+document.getElementById('measureBtn').onclick = doMeasure;
+document.getElementById('qasmBtn').onclick = exportQASM;
+document.getElementById('clearBtn').onclick = () => {initGrid(); pending=null; shotData=null; renderAll(); setStatus('电路已清空。');};
+</script>
+</body>
+</html>

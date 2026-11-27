@@ -14,6 +14,7 @@
 | 🤖 监督学习 | `docs/supervised*.html` | 面试版 + 小学生版 |
 | 📽️ 课件 | `assets/ppt/` | 面试串讲 PPT（动画版 16 页 / 纯净版 15 页） |
 | ☁️ 量子云平台 | `docs/quantum-clouds.html` | 国内 8+ 平台功能调研、对比矩阵、官网截图（2026-11 调研） |
+| 🧪 在线模拟器 | `docs/quantum-simulator.html` | 纯前端态矢模拟：搭电路 / 振幅 / 概率 / Bloch 球 / shots / QASM 导出 |
 | 📄 Markdown 原文 | `docs/*.md` | 全部资料的源文件，可下载 |
 
 ## 本地预览
@@ -56,8 +57,9 @@ git push -u origin main
 │   ├── ppt/              # 2 份课件 PPT
 │   ├── poster.png        # 主动画封面帧
 │   └── screenshots/      # 4 张量子云平台官网实拍截图
-└── docs/                 # 渲染好的文档页 + Markdown 原文
-    └── quantum-clouds.html  # 国内量子云平台专题页
+├── docs/                 # 渲染好的文档页 + Markdown 原文
+│   ├── quantum-clouds.html   # 国内量子云平台专题页
+│   └── quantum-simulator.html # 纯前端在线量子电路模拟器
 ```
 
 ## 重新构建文档页
